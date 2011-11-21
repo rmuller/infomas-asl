@@ -8,7 +8,7 @@ The INFOMAS PCM Application Suite is a commercial SaaS based Product Content Man
 + Language: Java 6 SE
 + Build System: Maven 3
 + Apache License, Version 2.0
-+ Maven Artifacts are (currently) not available from central maven
++ Maven Artifacts are (currently) not available from central maven but can be downloaded from GitHub (see menu option "Downloads")
 
 ## Modules
 Currently INFOMAS ASL contains the following modules:
@@ -20,7 +20,7 @@ Currently INFOMAS ASL contains the following modules:
 This library can be used to scan (part of) the class path for annotated classes, methods or instance variables.
 Main advantages of this library compared with similar solutions are: light weight (**no dependencies**, simple API, **15 kb jar file**) and **very fast** (fastest annotation detection library as far as i know).
 
-Maven configuration:
+#### Maven configuration:
 
 ``` xml
 <dependency>
@@ -30,7 +30,9 @@ Maven configuration:
 </dependency>
 ```
 
-Example Usage:
+#### Example Usage:
+Put the `annotation-detector-{version}.jar` in the class path. No other dependencies are required!
+You can either scan the complete class path or only scan specified packages (see JavaDoc for more details).
 
 ``` java
 // Scan all .class files on the class path

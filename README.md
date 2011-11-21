@@ -1,6 +1,6 @@
 # infomas-asl
 
-INFOMAS ASL contains all open sources code from the INFOMAS PCM Application Suite. All code is licensed by the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0), so it can be used by both open source and commercial projects.
+INFOMAS ASL contains all open sourced code from the INFOMAS PCM Application Suite. All code is licensed by the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0), so it can be used by both open source and commercial projects.
 
 The INFOMAS PCM Application Suite is a commercial SaaS based Product Content Management (also known as PIM, Product Information Management) Application. For more information, visit http://www.xiam.nl.
 
@@ -12,6 +12,7 @@ The INFOMAS PCM Application Suite is a commercial SaaS based Product Content Man
 
 ## Modules
 Currently INFOMAS ASL contains the following modules:
+
 + annotation-detector
 + More to come ...
 
@@ -20,6 +21,7 @@ This library can be used to scan (part of) the class path for annotated classes,
 Main advantages of this library compared with similar solutions are: light weight (**no dependencies**, simple API, **15 kb jar file**) and **very fast** (fastest annotation detection library as far as i know).
 
 Maven configuration:
+
 ``` xml
 <dependency>
    <groupId>eu.infomas</groupId>

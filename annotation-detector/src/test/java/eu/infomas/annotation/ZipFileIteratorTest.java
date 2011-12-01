@@ -1,6 +1,6 @@
 package eu.infomas.annotation;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -79,7 +79,21 @@ public final class ZipFileIteratorTest {
             ++count;
         }
         //System.out.println("count=" + count);
-        assertEquals(17436, count); // Java 6 SE update 26
+        assertEquals(getClassCount(), count); // Java 6 SE update 26
     }
 
+   private int getClassCount() {
+       final String javaVersion = System.getProperty("java.version");
+       if (javaVersion.startsWith("1.5")) {
+           return 0;
+       } else if (javaVersion.startsWith("1.6")) {
+           return javaVersion.contains("29") ? 17439 : 17436;
+       } if (javaVersion.startsWith("1.7")) {
+           return 19092;
+       } else {
+           fail("Java version not supported: " + javaVersion);
+           return 0;
+       }
+   }
+   
 }

@@ -1,7 +1,5 @@
 package eu.infomas.annotation;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,20 +9,20 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 public final class ZipFileIteratorTest {
     
-    // rt.jar is our test file. Always available and BIG (about 50MB)
-    // count=17436, bytes=49115087
-    private static final File RT_JAR = new File(new File(System.getProperty("java.home")), "lib/rt.jar");
+    private static final boolean DEBUG = false;
     
-    //@Ignore
+    // rt.jar is our test file. Always available and BIG (about 50MB)
+    // count=17436, bytes=49115087 @ Java 6 update 26
+    private static final File RT_JAR = new File(new File(System.getProperty("java.home")), "lib/rt.jar");
+
     @Test
     public void benchmarkReadZip() throws IOException {
         for (int i = 0; i < 5; ++i) {
-            testReadZipUsingZipFile(); // about up to 3 times faster! 60 versus 170 ms
+            testReadZipUsingZipFile(); // about up to 3 times faster! 60 ms versus 170 ms
             testReadZipUsingZipInputStream();
         }
     }
@@ -47,7 +45,8 @@ public final class ZipFileIteratorTest {
             bytes += buffer.size();
             ++count;
         }
-        //System.out.printf("Time: %d ms, count=%d, bytes=%d ZipFile\n", System.currentTimeMillis() - time, count, bytes);
+        if (DEBUG) System.out.printf("Time: %d ms, count=%d, bytes=%d ZipFile\n", 
+            System.currentTimeMillis() - time, count, bytes);
     }
 
     private void testReadZipUsingZipInputStream() throws IOException {
@@ -67,33 +66,8 @@ public final class ZipFileIteratorTest {
             bytes += buffer.size();
             ++count;
         }
-        //System.out.printf("Time: %d ms, count=%d, bytes=%d ZipInputStream\n", System.currentTimeMillis() - time, count, bytes);
+        if (DEBUG) System.out.printf("Time: %d ms, count=%d, bytes=%d ZipInputStream\n", 
+            System.currentTimeMillis() - time, count, bytes);
     }
-    
-    @Test
-    public void test() throws IOException {
-        ZipFileIterator iter = new ZipFileIterator(RT_JAR);
-        int count = 0;
-        while (iter.next() != null) {
-            //System.out.println(iter.getEntry());
-            ++count;
-        }
-        //System.out.println("count=" + count);
-        assertEquals(getClassCount(), count); // Java 6 SE update 26
-    }
-
-   private int getClassCount() {
-       final String javaVersion = System.getProperty("java.version");
-       if (javaVersion.startsWith("1.5")) {
-           return 0;
-       } else if (javaVersion.startsWith("1.6")) {
-           return javaVersion.contains("29") ? 17439 : 17436;
-       } if (javaVersion.startsWith("1.7")) {
-           return 19092;
-       } else {
-           fail("Java version not supported: " + javaVersion);
-           return 0;
-       }
-   }
    
 }

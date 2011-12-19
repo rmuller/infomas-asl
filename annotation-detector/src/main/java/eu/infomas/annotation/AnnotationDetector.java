@@ -40,14 +40,16 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * {@code AnnotationDetector} reads Java ClassFile files (".class") and exposes the 
+ * {@code AnnotationDetector} reads Java Class File (".class") files and reports the 
  * encountered annotations via a simple, developer friendly API.
  * <br/>
- * Main advantages of this library compared with similar solutions are: <u>light weight</u> 
- * (no dependencies, simple API, 14 kb jar file) and <u>very fast</u> (fastest annotation 
- * detection library as far as i know).
- * <br/>
- * A class file consists of a stream of 8-bit bytes. All 16-bit, 32-bit, and 64-bit
+ * Main advantages of this library compared with similar solutions are:
+ * <ul>
+ * <li><u>light weight</u> (no dependencies, simple API, 15 kb jar file)</li> 
+ * <li><u>very fast</u> (fastest annotation detection library as far as i know)</li>
+ * </ul>
+ *
+ * A Java Class File consists of a stream of 8-bit bytes. All 16-bit, 32-bit, and 64-bit
  * quantities are constructed by reading in two, four, and eight consecutive 8-bit
  * bytes, respectively. Multi byte data items are always stored in big-endian order,
  * where the high bytes come first. In the Java and Java 2 platforms, this format is
@@ -103,12 +105,13 @@ import java.util.Set;
  * <a href="http://static.springsource.org/spring/docs/2.5.x/api/org/springframework/context/annotation/ClassPathScanningCandidateComponentProvider.html">this</a>
  * is the way to go.</li>
  * </ul>
- * All Similar projects make use of a byte code manipulation library (like BCEL, ASM and javassist).
+ * All above mentioned projects make use of a byte code manipulation library (like BCEL, 
+ * ASM or Javassist).
  * 
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
  */
-public class AnnotationDetector {
+public final class AnnotationDetector {
     
     /**
      * {@code Reporter} is the base interface, used to report the detected annotations.
@@ -157,7 +160,7 @@ public class AnnotationDetector {
     
     // Only used during development. If set to "true" debug messages are displayed.
     private static final boolean DEBUG = false;
-    
+
     // Constant Pool type tags
     private static final int CP_UTF8 = 1;
     private static final int CP_INTEGER = 3;
@@ -171,17 +174,6 @@ public class AnnotationDetector {
     private static final int CP_REF_INTERFACE = 11;
     private static final int CP_NAME_AND_TYPE = 12;
 
-    // Type access modifiers
-    // See page 97 (for members, see page 120, 123 and 143. Not Compatible!)
-//    private static final int ACC_PUBLIC = 0x0001;
-//    private static final int ACC_FINAL = 0x0010;
-//    private static final int ACC_SUPER = 0x0020; // not used anymore
-//    private static final int ACC_INTERFACE = 0x0200;
-//    private static final int ACC_ABSTRACT = 0x0400;
-//    private static final int ACC_SYNTHETIC = 0x1000;
-//    private static final int ACC_ANNOTATION = 0x2000;
-//    private static final int ACC_ENUM = 0x4000;
-        
     // AnnotationElementValue
     private static final int BYTE = 'B';
     private static final int CHAR = 'C';
@@ -206,8 +198,9 @@ public class AnnotationDetector {
     private TypeReporter typeReporter;
     private FieldReporter fieldReporter;
     private MethodReporter methodReporter;
-    
-    private String typeName; // name of this interface or class
+
+    // the 'raw' name of this interface or class (using '/' instead of '.' in package name)
+    private String typeName; 
     // Reusing the constantPool is not needed for better performance
     private Object[] constantPool;
     private String memberName;
@@ -217,6 +210,7 @@ public class AnnotationDetector {
      * to the specified {@code Reporter}.
      */
     public AnnotationDetector(final Reporter reporter) {
+        
         final Class<? extends Annotation>[] a = reporter.annotations();
         annotations = new HashMap<String, Class<? extends Annotation>>(a.length);
         // map "raw" type names to Class object
@@ -224,13 +218,16 @@ public class AnnotationDetector {
             annotations.put("L" + a[i].getName().replace('.', '/') + ";", a[i]);
         }
         if (reporter instanceof TypeReporter) {
-            this.typeReporter = (TypeReporter)reporter;
+            typeReporter = (TypeReporter)reporter;
         }
         if (reporter instanceof FieldReporter) {
-            this.fieldReporter = (FieldReporter)reporter;
+            fieldReporter = (FieldReporter)reporter;
         }
         if (reporter instanceof MethodReporter) {
-            this.methodReporter = (MethodReporter)reporter;
+            methodReporter = (MethodReporter)reporter;
+        }
+        if (typeReporter == null && fieldReporter == null && methodReporter == null) {
+            throw new AssertionError("No reporter defined");
         }
     }
     
@@ -265,15 +262,15 @@ public class AnnotationDetector {
                 final File dir = toFile(url);
                 if (dir.isDirectory()) {
                     files.add(dir);
-                    print("Add directory=%s", dir);
+                    if (DEBUG) print("Add directory: '%s'", dir);
                 } else {
-                    // Resource in Jar File         
+                    // Resource in Jar File
                     final File jarFile = toFile(((JarURLConnection)url.openConnection()).getJarFileURL());
                     if (jarFile.isFile()) {
                         files.add(jarFile);
-                        print("Add jar file=%s", jarFile);
+                        if (DEBUG) print("Add jar file: '%s'", jarFile);
                     } else {
-                        throw new AssertionError();
+                        throw new AssertionError("Not a File: " + jarFile);
                     }
                 }
             }
@@ -291,68 +288,60 @@ public class AnnotationDetector {
      * {@code CAFEBABE} are silently ignored.
      */
     public final void detect(final File... filesOrDirectories) throws IOException {
+        if (DEBUG) print("detectFilesOrDirectories: %s", (Object)filesOrDirectories);
         detect(new ClassFileIterator(filesOrDirectories));
     }
-    
-    /**
-     * Subclasses can override this method to filter certain types, based on
-     * the access modifiers.
-     * The default implementation just returns {@code true}.
-     * To accept only public concrete classes, use:
-     * <pre>
-     * return Modifier.isPublic(modifiers) && !Modifier.isAbstract(modifiers);
-     * </pre>
-     * Note that you should not use this feature for performance considerations,
-     * it barely increases performance.
-     */
-    protected boolean accept(final int modifiers) {
-        return true;
-    }
-    
+
     // private
     
     private File toFile(final URL url) throws UnsupportedEncodingException {
         return new File(URLDecoder.decode(url.getFile(), "UTF-8"));
     }
-        
+
     private void detect(final ClassFileIterator iterator) throws IOException {
+        // count number of analyzed .class files
+        int count = 0;
         InputStream is;
         while ((is = iterator.next()) != null) {
             cpBuffer.readFrom(is);
-            if (cpBuffer.size() < 4 || !checkCafebabe(cpBuffer)) {
-                print("no Java Class File: '%s'", iterator.getName());
-                continue;
+            if (hasCafebabe(cpBuffer)) {
+                ++count;
+                if (DEBUG) print("Analyze '%s' (size=%d, count=%d)", iterator.getName(), cpBuffer.size(), count);
+                detect(cpBuffer);
+            } else {
+                if (DEBUG) print("Skip file (no Java Class File): '%s'", iterator.getName());
             }
-            print("%s: size=%d", iterator.getName(), cpBuffer.size());
-            detect(cpBuffer);
         }
     }
 
-    private boolean checkCafebabe(final DataInput di) throws IOException {
-        return di.readInt() == 0xCAFEBABE;
+    private boolean hasCafebabe(final ClassFileBuffer buffer) throws IOException {
+        return buffer.size() > 4 &&  buffer.readInt() == 0xCAFEBABE;
     }
 
-    
     /**
      * Inspect the given (Java) class file in streaming mode.
      */
     private void detect(final DataInput di) throws IOException {
         readVersion(di);
         readConstantPoolEntries(di);
-        if (accept(readAccessFlags(di))) {
-            readThisClass(di);
-            readSuperClass(di);
-            readInterfaces(di);
-            readFields(di);
-            readMethods(di);
-            readAttributes(di, typeReporter);
+        readAccessFlags(di);
+        readThisClass(di);
+        readSuperClass(di);
+        readInterfaces(di);
+        readFields(di);
+        readMethods(di);
+        readAttributes(di, 'T', typeReporter == null);
+    }
+
+    private void readVersion(final DataInput di) throws IOException {
+        // sequence: minor version, major version (argument_index is 1-based)
+        if (DEBUG) {
+            print("Java Class version %2$d.%1$d", di.readUnsignedShort(), di.readUnsignedShort()); 
+        } else {
+            di.skipBytes(4);
         }
     }
-    
-    private void readVersion(final DataInput di) throws IOException {
-        di.skipBytes(4); // 2 * u2
-    }
-    
+
     private void readConstantPoolEntries(final DataInput di) throws IOException {
         final int count = di.readUnsignedShort();
         constantPool = new Object[count];
@@ -363,7 +352,7 @@ public class AnnotationDetector {
             }
         }
     }
-    
+
     /**
      * Return true if a double slot is read (in case of Double or Long constant).
      */
@@ -402,106 +391,114 @@ public class AnnotationDetector {
         }
     }
 
-    private int readAccessFlags(final DataInput di) throws IOException {
-        return di.readUnsignedShort();
+    private void readAccessFlags(final DataInput di) throws IOException {
+        di.skipBytes(2); // u2
     }
     
     private void readThisClass(final DataInput di) throws IOException {
         typeName = resolveUtf8(di);
-        print("read type '%s'", typeName);
+        if (DEBUG) print("read type '%s'", typeName);
     }
-    
+
     private void readSuperClass(final DataInput di) throws IOException {
-        di.skipBytes(2); // readUnsignedShort()
+        di.skipBytes(2); // u2
     }
 
     private void readInterfaces(final DataInput di) throws IOException {
         final int count = di.readUnsignedShort();
-        di.skipBytes(count * 2); // count * readUnsignedShort()
-    }   
-    
+        di.skipBytes(count * 2); // count * u2
+    }
+
     private void readFields(final DataInput di) throws IOException {
         final int count = di.readUnsignedShort();
-        print("field count = %d", count);
+        if (DEBUG) print("field count = %d", count);
         for (int i = 0; i < count; ++i) {
-            di.skipBytes(2); // accessFlags, readUnsignedShort()
+            readAccessFlags(di);
             memberName = resolveUtf8(di);
-            String descriptor = resolveUtf8(di);
-            readAttributes(di, fieldReporter);
-            print("Field: %s, decriptor: %s", memberName, descriptor);
+            final String descriptor = resolveUtf8(di);
+            readAttributes(di, 'F', fieldReporter == null);
+            if (DEBUG) print("Field: %s, descriptor: %s", memberName, descriptor);
         }
     }   
 
     private void readMethods(final DataInput di) throws IOException {
         final int count = di.readUnsignedShort();
-        print("method count = %d", count);
+        if (DEBUG) print("method count = %d", count);
         for (int i = 0; i < count; ++i) {
-            di.skipBytes(2); // accessFlags, readUnsignedShort()
+            readAccessFlags(di);
             memberName = resolveUtf8(di);
-            String descriptor = resolveUtf8(di);
-            readAttributes(di, methodReporter);
-            print("Method: %s, descriptor: %s", memberName, descriptor);
+            final String descriptor = resolveUtf8(di);
+            readAttributes(di, 'M', methodReporter == null);
+            if (DEBUG) print("Method: %s, descriptor: %s", memberName, descriptor);
         }
     }   
     
-    private void readAttributes(final DataInput di, final Reporter reporter) throws IOException {
+    private void readAttributes(final DataInput di, final char reporterType, final boolean skipReporting) 
+        throws IOException {
+        
         final int count = di.readUnsignedShort();
-        print("attribute count = %d", count);
+        if (DEBUG) print("attribute count (%s) = %d", reporterType, count);
         for (int i = 0; i < count; ++i) {
             final String name = resolveUtf8(di);
             // in bytes, use this to skip the attribute info block
             final int length = di.readInt();
-            if (reporter != null &&
+            if (!skipReporting && 
                 ("RuntimeVisibleAnnotations".equals(name) ||
                 "RuntimeInvisibleAnnotations".equals(name))) {
-                readAnnotations(di, reporter);
+                readAnnotations(di, reporterType);
             } else {
-                print("skip attribute %s", name);
+                if (DEBUG) print("skip attribute %s", name);
                 di.skipBytes(length);
             }
         }
     }
 
-    private void readAnnotations(final DataInput di, final Reporter reporter) throws IOException {
+    private void readAnnotations(final DataInput di, final char reporterType) throws IOException {
         // the number of Runtime(In)VisibleAnnotations
         final int count = di.readUnsignedShort();
-        print("Annotation count: %d", count);
+        if (DEBUG) print("annotation count (%s) = %d", reporterType, count);
         for (int i = 0; i < count; ++i) {
-            final String rawTypeName = resolveUtf8(di);
-            readAnnotationElements(di);
+            final String rawTypeName = readAnnotation(di);
             final Class<? extends Annotation> type = annotations.get(rawTypeName);
             if (type == null) {
                 continue;
             }
             final String externalTypeName = typeName.replace('/', '.');
-            if (typeReporter == reporter) {
-                typeReporter.reportTypeAnnotation(type, externalTypeName);
-            } else if (fieldReporter == reporter) {
-                fieldReporter.reportFieldAnnotation(type, externalTypeName, memberName);
-            } else if (methodReporter == reporter) {
-                methodReporter.reportMethodAnnotation(type, externalTypeName, memberName);
-            } else {
-                new AssertionError("No reporter defined");
+            switch (reporterType) {
+                case 'T':
+                    typeReporter.reportTypeAnnotation(type, externalTypeName);
+                    break;
+                case 'F':
+                    fieldReporter.reportFieldAnnotation(type, externalTypeName, memberName);
+                    break;
+                case 'M':
+                    methodReporter.reportMethodAnnotation(type, externalTypeName, memberName);
+                    break;
+                default:
+                    throw new AssertionError("reporterType=" + reporterType);
             }
         }
     }
     
-    // Annotation Elements are just skipped
-    private void readAnnotationElements(final DataInput di) throws IOException {
+    private String readAnnotation(final DataInput di) throws IOException {
+        final String rawTypeName = resolveUtf8(di);
         // num_element_value_pairs
         final int count = di.readUnsignedShort();
+        if (DEBUG) print("annotation elements count: %d", count);
         for (int i = 0; i < count; ++i) {
-            readAnnotationElement(di);
+            if (DEBUG) {
+                print("element '%s'", resolveUtf8(di));
+            } else {
+                di.skipBytes(2);
+            }
+            readAnnotationElementValue(di);
         }
+        return rawTypeName;
     }
-    
-    private void readAnnotationElement(final DataInput di) throws IOException {
-        /*String name = */resolveUtf8(di);
-        readAnnotationElementValue(di);
-    }
-    
+
     private void readAnnotationElementValue(final DataInput di) throws IOException {
         final int tag = di.readUnsignedByte();
+        if (DEBUG) print("tag='%c'", (char)tag);
         switch (tag) {
             case BYTE:
             case CHAR:
@@ -521,10 +518,9 @@ public class AnnotationDetector {
                 di.skipBytes(2);
                 break;
             case ANNOTATION:
-                readAnnotationElement(di);
+                readAnnotation(di);
                 break;
             case ARRAY:
-                // number of array elements
                 final int count = di.readUnsignedShort();
                 for (int i = 0; i < count; ++i) {
                     readAnnotationElementValue(di);
@@ -536,18 +532,25 @@ public class AnnotationDetector {
     }
 
     /**
-     * Look up from constant pool.
-     * Read the u2 value and look up the utf8 value from the constant pool.
+     * Look up the String value, identified by the u2 index value from constant pool
+     * (direct or indirect).
      */
     private String resolveUtf8(final DataInput di) throws IOException {
         final int index = di.readUnsignedShort();
         final Object value = constantPool[index];
-        final String s = value instanceof Integer ? (String)constantPool[(Integer)value] : (String)value;
-        print("resolveUtf8(%d): %s --> %s", index, value, s);
+        final String s;
+        if (value instanceof Integer) {
+            s = (String)constantPool[(Integer)value];
+            if (DEBUG) print("resolveUtf8(%d): %d --> %s", index, value, s);
+        } else {
+            s = (String)value;
+            if (DEBUG) print("resolveUtf8(%d): %s", index, s);
+        }
+        
         return s;
     }
     
-    /** Helper functions for simple logging. */
+    /** Helper method for simple (debug) logging. */
     private static void print(final String message, final Object... args) {
         if (DEBUG) {
             final String logMessage;
@@ -555,8 +558,13 @@ public class AnnotationDetector {
                 logMessage = message;
             } else {
                 for (int i = 0; i < args.length; ++i) {
+                    // arguments may be null
+                    if (args[i] == null) {
+                        continue;
+                    }
                     if (args[i].getClass().isArray()) {
-                        args[i] = Arrays.asList(args[i]);
+                        // cast back to array! Note that primitive arrays are not supported
+                        args[i] = Arrays.toString((Object[])args[i]);
                     } else if (args[i] == Class.class) {
                         args[i] = ((Class<?>)args[i]).getName();
                     }
@@ -566,5 +574,5 @@ public class AnnotationDetector {
             System.out.println(logMessage);
         }
     }
-    
+
 }

@@ -3,3 +3,6 @@
 /annotation-detector/target/
 /incubator/.settings/
 /incubator/target/
+/doc/
+/nbactions.xml
+/annotation-detector/nb-configuration.xml

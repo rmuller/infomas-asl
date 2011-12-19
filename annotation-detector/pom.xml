@@ -29,7 +29,7 @@
     <parent>
         <groupId>eu.infomas</groupId>
         <artifactId>infomas-asl</artifactId>
-        <version>3.0.0</version>
+        <version>3.0.1-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
     <artifactId>annotation-detector</artifactId>

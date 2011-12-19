@@ -32,7 +32,7 @@ Main advantages of this library compared with similar solutions are: light weigh
 
 #### Example Usage:
 Put the `annotation-detector-{version}.jar` in the class path. No other dependencies are required!
-You can either scan the complete class path or only scan specified packages (see JavaDoc for more details).
+You can either scan the complete class path or only scan specified packages (see [JavaDoc](https://github.com/rmuller/infomas-asl/blob/master/annotation-detector/src/main/java/eu/infomas/annotation/AnnotationDetector.java) for more details).
 
 ``` java
 // Scan all .class files on the class path

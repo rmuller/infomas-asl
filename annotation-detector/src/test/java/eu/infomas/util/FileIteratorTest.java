@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-
 public final class FileIteratorTest {
 
     @Test
@@ -34,7 +33,8 @@ public final class FileIteratorTest {
     public void testSingleDirectory4() throws IOException {
         FileIterator iter = new FileIterator(
             new File("./src/test/java/eu/infomas"));
-        assertEquals(3, countFiles(iter));
+        // 5 in annotation and 1 in util
+        assertEquals(6, countFiles(iter));
     }
     
     @Test
@@ -42,7 +42,7 @@ public final class FileIteratorTest {
         FileIterator iter = new FileIterator(
             new File("./src/test/java/eu/infomas/util/FileIteratorTest.java"), 
             new File("./src/test/java/eu/infomas/annotation/"));
-        assertEquals(3, countFiles(iter));
+        assertEquals(6, countFiles(iter));
     }
 
     private int countFiles(final FileIterator iter) throws IOException {

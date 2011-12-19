@@ -32,8 +32,8 @@ import eu.infomas.util.FileIterator;
 
 /**
  * {@code ClassFileIterator} is used to iterate over all Java ClassFile files
- * available within a specific context. For every Java ClassFile (@code .class})
- * an opened {@link InputStream} is returned.
+ * available within a specific context. For every Java ClassFile ({@code .class})
+ * an {@link InputStream} is returned.
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
@@ -104,7 +104,7 @@ final class ClassFileIterator {
 
     // private
     
-    /** Return the class path as an array of {@link File} objects. */
+    /** Returns the class path of the current JVM instance as an array of {@link File} objects. */
     private static File[] classPath() {
         final String[] fileNames = System.getProperty("java.class.path").split(File.pathSeparator);
         final File[] files = new File[fileNames.length];

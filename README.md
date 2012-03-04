@@ -2,13 +2,13 @@
 
 INFOMAS ASL contains all open sourced code from the INFOMAS PCM Application Suite. All code is licensed by the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0), so it can be used by both open source and commercial projects.
 
-The INFOMAS PCM Application Suite is a commercial SaaS based Product Content Management (also known as PIM, Product Information Management) Application. For more information, visit http://www.xiam.nl.
+The INFOMAS PCM Application Suite is a commercial Product Content Management (also known as PIM, Product Information Management) Application. For more information, visit http://www.xiam.nl.
 
 ## Quick Facts
-+ Language: Java 6 SE
++ Language: Java 6 SE or better (tested with both Sun JDK 6 and 7)
 + Build System: Maven 3
 + Apache License, Version 2.0
-+ Maven Artifacts are (currently) not available from central maven but can be downloaded from GitHub (see menu option "Downloads")
++ Maven Artifacts are available from central maven
 
 ## Modules
 Currently INFOMAS ASL contains the following modules:
@@ -26,7 +26,7 @@ Main advantages of this library compared with similar solutions are: light weigh
 <dependency>
    <groupId>eu.infomas</groupId>
    <artifactId>annotation-detector</artifactId>
-   <version>3.0.0-SNAPSHOT</version>
+   <version>3.0.0</version>
 </dependency>
 ```
 
@@ -60,6 +60,6 @@ That's all!
 
 ## License
 
-Copyright (c) 2011 XIAM Solutions B.V.
+Copyright (c) 2011 - 2012 XIAM Solutions B.V.
 
 Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0

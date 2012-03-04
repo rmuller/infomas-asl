@@ -25,7 +25,9 @@ package eu.infomas.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Deque;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 /**
  * {@code FileIterator} enables iteration over all files in a directory and all
@@ -36,7 +38,8 @@ import java.util.LinkedList;
  * FileIterator iter = new FileIterator(new File("./src"));
  * File f;
  * while ((f = iter.next()) != null) {
- *     // do something witgh f
+ *     // do something with f
+ *     assert f == iter.getCurrent();
  * }
  * </pre>
  * 
@@ -45,7 +48,8 @@ import java.util.LinkedList;
  */
 public final class FileIterator {
 
-    private final LinkedList<File> stack = new LinkedList<File>();
+    private final Deque<File> stack = new LinkedList<File>();
+    private int rootCount;
     private File current;
     
     /**
@@ -60,6 +64,7 @@ public final class FileIterator {
      */
     public FileIterator(final File... filesOrDirectories) {
         addReverse(filesOrDirectories);
+        rootCount = stack.size();
     }
 
     /**
@@ -72,6 +77,18 @@ public final class FileIterator {
     }
     
     /**
+     * Return {@code true} if the current file is one of the files originally
+     * specified as one of the constructor file parameters, i.e. is a root file
+     * or directory.
+     */
+    public boolean isRootFile() {
+        if (current == null) {
+            throw new NoSuchElementException();
+        }
+        return stack.size() < rootCount;
+    }
+    
+    /**
      * Return the next {@link File} object or {@code null} if no more files are
      * available.
      * 
@@ -79,10 +96,14 @@ public final class FileIterator {
      */
     public File next() throws IOException {
         if (stack.isEmpty()) {
+            current = null;
             return null;
         } else {
             current = stack.removeLast();
             if (current.isDirectory()) {
+                if (stack.size() < rootCount) {
+                    rootCount = stack.size();
+                }
                 addReverse(current.listFiles());
                 return next();
             } else {

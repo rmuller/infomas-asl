@@ -83,13 +83,13 @@ final class ClassFileIterator {
             if (file == null) {
                 return null;
             } else {
-                if (endsWithIgnoreCase(file.getName(), ".jar") ||
-                    endsWithIgnoreCase(file.getName(), ".zip")) {
-                    zipIterator = new ZipFileIterator(file);
-                    return next();
-                } else {
+                final String name = file.getName();
+                if (name.endsWith(".class")) {
                     return new FileInputStream(file);
-                }
+                } else if (fileIterator.isRootFile() && endsWithIgnoreCase(name, ".jar")) {
+                    zipIterator = new ZipFileIterator(file);
+                } // else just ignore
+                return next();
             }
         } else {
             final InputStream is = zipIterator.next();

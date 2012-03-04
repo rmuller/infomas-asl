@@ -11,6 +11,7 @@ import java.util.zip.ZipInputStream;
 
 import org.junit.Test;
 
+// This class is used for benchmarking different ways to read a ZIP file in Java
 public final class ZipFileIteratorTest {
     
     private static final boolean DEBUG = false;

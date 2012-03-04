@@ -257,12 +257,12 @@ public final class AnnotationDetector {
             final Enumeration<URL> resourceEnum = classLoader.getResources(internalPackageName);
             while (resourceEnum.hasMoreElements()) {
                 final URL url = resourceEnum.nextElement();
-                // do not use url.toString() or url.toExternalForm() because of the
-                // file: prefix / protocol identifier
-                final File dir = toFile(url);
-                if (dir.isDirectory()) {
-                    files.add(dir);
-                    if (DEBUG) print("Add directory: '%s'", dir);
+                if ("file".equals(url.getProtocol())) {
+                    final File dir = toFile(url);
+                    if (dir.isDirectory()) {
+                        files.add(dir);
+                        if (DEBUG) print("Add directory: '%s'", dir);
+                    }
                 } else {
                     // Resource in Jar File
                     final File jarFile = toFile(((JarURLConnection)url.openConnection()).getJarFileURL());
@@ -295,6 +295,8 @@ public final class AnnotationDetector {
     // private
     
     private File toFile(final URL url) throws UnsupportedEncodingException {
+        // do not use url.toString() or url.toExternalForm() because of the
+        // file: prefix / protocol identifier
         return new File(URLDecoder.decode(url.getFile(), "UTF-8"));
     }
 

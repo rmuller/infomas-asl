@@ -1,6 +1,7 @@
 package eu.infomas.annotation;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,7 @@ public final class AnnotationDetectorTest {
     
     private static final boolean DEBUG = false;
     
+    @SuppressWarnings("unused") // used for testing only
     @RuntimeVisibleTestAnnotation
     private String fieldWithAnnotation;
     
@@ -78,6 +80,7 @@ public final class AnnotationDetectorTest {
     // and BIG (about 50MB). Number of .class files: 17436 @ Java 6 update 26
     private static final File RT_JAR = new File(new File(System.getProperty("java.home")), "lib/rt.jar");
 
+    // Mainly used as benchmark (timing) method
     @Test
     public void testClassPathScannerRT() throws IOException {
         final long time = System.currentTimeMillis();
@@ -86,9 +89,14 @@ public final class AnnotationDetectorTest {
         final AnnotationDetector cf = new AnnotationDetector(counter);
         // Scan all Java Class Files in the specified files (i.e. rt.jar)
         // 380 ms
-        cf.detect(RT_JAR);
+        cf.detect(RT_JAR); // scan specific files and directories
         if (DEBUG) System.err.printf("Time: %d ms.\n", System.currentTimeMillis() - time);
-        assertEquals(66, counter.getTypeCount()); // Java 6 SE update 26
+        
+        // we cannot use the returned count as useful value, because it differs from 
+        // JDK version to JDK version, but The Deprecated class must be detected
+        assertTrue(counter.getTypeCount() > 0);
+        //assertEquals(66, counter.getTypeCount()); // Java 6 SE update 26
+        //assertEquals(83, counter.getTypeCount()); // Java 7 SE update 2
     }
 
     @Test
@@ -97,12 +105,12 @@ public final class AnnotationDetectorTest {
 
         final CountingReporter counter = new CountingReporter(Test.class);
         final AnnotationDetector cf = new AnnotationDetector(counter);
-        cf.detect();
+        cf.detect(); // complete class path is scanned
         // 120 ms
         if (DEBUG) System.err.printf("Time: %d ms.\n", System.currentTimeMillis() - time);
         assertEquals(0, counter.getTypeCount());
         assertEquals(0, counter.getFieldCount());
-        assertEquals(10, counter.getMethodCount());
+        assertEquals(14, counter.getMethodCount());
     }
 
     @Test
@@ -112,12 +120,12 @@ public final class AnnotationDetectorTest {
         @SuppressWarnings("unchecked")
         final CountingReporter counter = new CountingReporter(Test.class);
         final AnnotationDetector cf = new AnnotationDetector(counter);
-        cf.detect("eu.infomas");
+        cf.detect("eu.infomas"); // only this package and sub package(s) are scanned
         // 6 ms
         if (DEBUG) System.err.printf("Time: %d ms.\n", System.currentTimeMillis() - time);
         assertEquals(0, counter.getTypeCount());
         assertEquals(0, counter.getFieldCount());
-        assertEquals(10, counter.getMethodCount());
+        assertEquals(14, counter.getMethodCount());
     }
     
     /**
@@ -134,8 +142,6 @@ public final class AnnotationDetectorTest {
             RuntimeVisibleTestAnnotations.class,
             RuntimeVisibleTestAnnotation.class,
             RuntimeInvisibleTestAnnotation.class);
-//        final File file = new File("./target/test-classes/eu/infomas/annotation/AnnotationDetectorTest.class");
-//        new AnnotationDetector(counter).detect(file);
         // only in this package == only this class!
         new AnnotationDetector(counter).detect("eu.infomas.annotation");
         

@@ -301,18 +301,12 @@ public final class AnnotationDetector {
     }
 
     private void detect(final ClassFileIterator iterator) throws IOException {
-        // count number of analyzed .class files
-        int count = 0;
         InputStream is;
         while ((is = iterator.next()) != null) {
             cpBuffer.readFrom(is);
             if (hasCafebabe(cpBuffer)) {
-                ++count;
-                if (DEBUG) print("Analyze '%s' (size=%d, count=%d)", iterator.getName(), cpBuffer.size(), count);
                 detect(cpBuffer);
-            } else {
-                if (DEBUG) print("Skip file (no Java Class File): '%s'", iterator.getName());
-            }
+            } // else ignore
         }
     }
 

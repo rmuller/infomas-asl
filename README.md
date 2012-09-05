@@ -63,3 +63,5 @@ That's all!
 Copyright (c) 2011 - 2012 XIAM Solutions B.V.
 
 Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+
+[![Build Status](https://secure.travis-ci.org/rmuller/infomas-asl.png)](http://travis-ci.org/rmuller/infomas-asl)

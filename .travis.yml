@@ -1,5 +1,5 @@
 language: java
 jdk:
-  - openjdk6
-  - openjdk7
   - oraclejdk7
+pre-install: cat /home/travis/.m2/settings.xml
+install: mvn install -DskipTests=true

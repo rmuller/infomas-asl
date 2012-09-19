@@ -257,7 +257,7 @@ public final class AnnotationDetector {
             final Enumeration<URL> resourceEnum = classLoader.getResources(internalPackageName);
             while (resourceEnum.hasMoreElements()) {
                 final URL url = resourceEnum.nextElement();
-                if ("file".equals(url.getProtocol())) {
+                if ("file".equals(url.getProtocol()) || "vfs".equals(url.getProtocol())) {
                     final File dir = toFile(url);
                     if (dir.isDirectory()) {
                         files.add(dir);

@@ -1,5 +1,8 @@
 language: java
 jdk:
   - oraclejdk7
-pre-install: cat /home/travis/.m2/settings.xml
-install: mvn install -DskipTests=true
+before_install:
+  - cat /home/travis/.m2/settings.xml
+  - cat /proc/meminfo | grep Mem
+  - cat /proc/cpuinfo | grep "model name"
+install: mvn -q install -DskipTests=true

@@ -34,7 +34,7 @@
    
     <groupId>eu.infomas</groupId>
     <artifactId>infomas-asl</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.1</version>
     <packaging>pom</packaging>
     <name>INFOMAS ASL :: Parent</name>
     <description>Parent POM for open source projects of XIAM Solutions B.V.</description>

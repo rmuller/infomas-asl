@@ -257,11 +257,25 @@ public final class AnnotationDetector {
             final Enumeration<URL> resourceEnum = classLoader.getResources(internalPackageName);
             while (resourceEnum.hasMoreElements()) {
                 final URL url = resourceEnum.nextElement();
-                if ("file".equals(url.getProtocol()) || "vfs".equals(url.getProtocol())) {
+
+                boolean isVfs = "vfs".equals(url.getProtocol());
+                if ("file".equals(url.getProtocol()) || isVfs) {
                     final File dir = toFile(url);
                     if (dir.isDirectory()) {
                         files.add(dir);
                         if (DEBUG) print("Add directory: '%s'", dir);
+                    } else if (isVfs) {
+                        //Jar file via JBoss VFS protocol - strip package name
+                        String jarPath = dir.getPath();
+                        int idx = jarPath.indexOf(".jar");
+                        if (idx > -1) { 
+                            jarPath = jarPath.substring(0, idx + 4);
+                            File jarFile = new File(jarPath);
+                            if (jarFile.isFile()) {
+                                files.add(jarFile);
+                                if (DEBUG) print("Add jar file: '%s'", jarFile);
+                            }
+                        }
                     }
                 } else {
                     // Resource in Jar File

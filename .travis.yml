@@ -4,6 +4,5 @@ jdk:
   - openjdk7
   - openjdk6
 before_install:
-  - sudo cat /proc/meminfo | grep Mem
-  - sudo cat /proc/cpuinfo | grep 'model name'
-install: mvn clean install
+  - 'cat /proc/cpuinfo | grep "model name"'
+  - 'sudo cat /proc/meminfo | grep Mem'

@@ -7,7 +7,8 @@ INFOMAS ASL contains all open sourced code from the INFOMAS PCM Application Suit
 The INFOMAS PCM Application Suite is a commercial Product Content Management (also known as PIM, Product Information Management) Application. For more information, visit http://www.xiam.nl.
 
 ## Quick Facts
-+ Language: Java 6 SE or better (tested with both Oracle JDK 6 and 7 and OpenJDK 7)
++ Language: Java 6 SE or better
++ Tested with both Oracle JDK 6 and 7 and OpenJDK 6 and 7 (Last three VM's using [Travis CI Server](https://travis-ci.org/))
 + Build System: Maven 3
 + Apache License, Version 2.0
 + Maven Artifacts are available from [Central Maven](http://search.maven.org/#search%7Cga%7C1%7Cinfomas)

@@ -1,14 +1,16 @@
 # infomas-asl
 
+[![Build Status](https://secure.travis-ci.org/rmuller/infomas-asl.png)](http://travis-ci.org/rmuller/infomas-asl)
+
 INFOMAS ASL contains all open sourced code from the INFOMAS PCM Application Suite. All code is licensed by the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0), so it can be used by both open source and commercial projects.
 
 The INFOMAS PCM Application Suite is a commercial Product Content Management (also known as PIM, Product Information Management) Application. For more information, visit http://www.xiam.nl.
 
 ## Quick Facts
-+ Language: Java 6 SE or better (tested with both Sun JDK 6 and 7)
++ Language: Java 6 SE or better (tested with both Oracle JDK 6 and 7 and OpenJDK 7)
 + Build System: Maven 3
 + Apache License, Version 2.0
-+ Maven Artifacts are available from central maven
++ Maven Artifacts are available from [Central Maven](http://search.maven.org/#search%7Cga%7C1%7Cinfomas)
 
 ## Modules
 Currently INFOMAS ASL contains the following modules:
@@ -18,7 +20,7 @@ Currently INFOMAS ASL contains the following modules:
 
 ### annotation-detector
 This library can be used to scan (part of) the class path for annotated classes, methods or instance variables.
-Main advantages of this library compared with similar solutions are: light weight (**no dependencies**, simple API, **15 kb jar file**) and **very fast** (fastest annotation detection library as far as i know).
+Main advantages of this library compared with similar solutions are: light weight (**no dependencies**, simple API, **16 kb jar file**) and **very fast** (fastest annotation detection library as far as I know).
 
 #### Maven configuration:
 
@@ -26,7 +28,7 @@ Main advantages of this library compared with similar solutions are: light weigh
 <dependency>
    <groupId>eu.infomas</groupId>
    <artifactId>annotation-detector</artifactId>
-   <version>3.0.0</version>
+   <version>3.0.2</version>
 </dependency>
 ```
 
@@ -64,4 +66,4 @@ Copyright (c) 2011 - 2012 XIAM Solutions B.V.
 
 Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 
-[![Build Status](https://secure.travis-ci.org/rmuller/infomas-asl.png)](http://travis-ci.org/rmuller/infomas-asl)
+[![Ohloh profile for ronaldmuller](https://www.ohloh.net/accounts/224392/widgets/account_tiny.gif)](https://www.ohloh.net/accounts/224392?ref=Tiny)

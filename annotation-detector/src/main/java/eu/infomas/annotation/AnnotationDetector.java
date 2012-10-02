@@ -257,8 +257,10 @@ public final class AnnotationDetector {
             final Enumeration<URL> resourceEnum = classLoader.getResources(internalPackageName);
             while (resourceEnum.hasMoreElements()) {
                 final URL url = resourceEnum.nextElement();
-
-                boolean isVfs = "vfs".equals(url.getProtocol());
+                // Handle JBoss VFS URL's which look like (example package 'nl.dvelop'):
+                // vfs:/foo/bar/website.war/WEB-INF/classes/nl/dvelop/
+                // vfs:/foo/bar/website.war/WEB-INF/lib/dwebcore-0.0.1.jar/nl/dvelop/
+                final boolean isVfs = "vfs".equals(url.getProtocol());
                 if ("file".equals(url.getProtocol()) || isVfs) {
                     final File dir = toFile(url);
                     if (dir.isDirectory()) {
@@ -267,13 +269,13 @@ public final class AnnotationDetector {
                     } else if (isVfs) {
                         //Jar file via JBoss VFS protocol - strip package name
                         String jarPath = dir.getPath();
-                        int idx = jarPath.indexOf(".jar");
+                        final int idx = jarPath.indexOf(".jar");
                         if (idx > -1) { 
                             jarPath = jarPath.substring(0, idx + 4);
-                            File jarFile = new File(jarPath);
+                            final File jarFile = new File(jarPath);
                             if (jarFile.isFile()) {
                                 files.add(jarFile);
-                                if (DEBUG) print("Add jar file: '%s'", jarFile);
+                                if (DEBUG) print("Add jar file from VFS: '%s'", jarFile);
                             }
                         }
                     }
@@ -305,22 +307,35 @@ public final class AnnotationDetector {
         if (DEBUG) print("detectFilesOrDirectories: %s", (Object)filesOrDirectories);
         detect(new ClassFileIterator(filesOrDirectories));
     }
-
+    
     // private
     
     private File toFile(final URL url) throws UnsupportedEncodingException {
         // do not use url.toString() or url.toExternalForm() because of the
-        // file: prefix / protocol identifier
+        // 'file:' prefix / protocol identifier
         return new File(URLDecoder.decode(url.getFile(), "UTF-8"));
     }
 
     private void detect(final ClassFileIterator iterator) throws IOException {
-        InputStream is;
-        while ((is = iterator.next()) != null) {
-            cpBuffer.readFrom(is);
-            if (hasCafebabe(cpBuffer)) {
-                detect(cpBuffer);
-            } // else ignore
+        InputStream stream;
+        while ((stream = iterator.next()) != null) {
+            try {
+                cpBuffer.readFrom(stream);
+                if (hasCafebabe(cpBuffer)) {
+                    detect(cpBuffer);
+                } // else ignore
+            } catch (Throwable t) {
+                // catch all errors
+                if (!iterator.isFile()) {
+                    // in case of an error we close the ZIP File here
+                    stream.close();
+                }
+            } finally {
+                // closing InputStream from ZIP Entry is handled by ZipFileIterator
+                if (iterator.isFile()) {
+                    stream.close();
+                }
+            }
         }
     }
 

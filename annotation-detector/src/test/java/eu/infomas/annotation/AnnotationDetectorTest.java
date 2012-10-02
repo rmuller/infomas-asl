@@ -2,7 +2,7 @@ package eu.infomas.annotation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
+import static eu.infomas.util.TestSupport.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -83,20 +83,26 @@ public final class AnnotationDetectorTest {
     // Mainly used as benchmark (timing) method
     @Test
     public void testClassPathScannerRT() throws IOException {
-        final long time = System.currentTimeMillis();
-
-        final CountingReporter counter = new CountingReporter(Deprecated.class);
-        final AnnotationDetector cf = new AnnotationDetector(counter);
-        // Scan all Java Class Files in the specified files (i.e. rt.jar)
-        // 380 ms
-        cf.detect(RT_JAR); // scan specific files and directories
-        if (DEBUG) System.err.printf("Time: %d ms.\n", System.currentTimeMillis() - time);
-        
-        // we cannot use the returned count as useful value, because it differs from 
-        // JDK version to JDK version, but The Deprecated class must be detected
-        assertTrue(counter.getTypeCount() > 0);
-        //assertEquals(66, counter.getTypeCount()); // Java 6 SE update 26
-        //assertEquals(83, counter.getTypeCount()); // Java 7 SE update 2
+        for (int i = 0; i < 6; ++i) {
+            final long time = System.currentTimeMillis();
+            final CountingReporter counter = new CountingReporter(Deprecated.class);
+            final AnnotationDetector cf = new AnnotationDetector(counter);
+            // Scan all Java Class Files in the specified files (i.e. rt.jar)
+            cf.detect(RT_JAR); // scan specific files and directories
+            if (i == 5) {
+                // report, first 5 iterations where for warming up VM
+                // java-6-oracle (u26): Time: 255 ms. Type Count: 66, Method Count: 395
+                // java-7-oracle (u7): Time: 315 ms. Type Count: 83, Method Count: 435
+                // java-7-openjdk (u7): Time: 994 ms. Type Count: 70, Method Count: 427
+                log("Time: %d ms. Type Count: %d, Method Count: %d", 
+                    System.currentTimeMillis() - time, counter.getTypeCount(), 
+                    counter.methodCount);
+                
+                // we cannot use the returned count as useful value, because it differs from 
+                // JDK version to JDK version, but The Deprecated class must be detected
+                assertTrue(counter.getTypeCount() > 0);                
+            }
+        }
     }
 
     @Test
@@ -107,7 +113,7 @@ public final class AnnotationDetectorTest {
         final AnnotationDetector cf = new AnnotationDetector(counter);
         cf.detect(); // complete class path is scanned
         // 120 ms
-        if (DEBUG) System.err.printf("Time: %d ms.\n", System.currentTimeMillis() - time);
+        if (DEBUG) log("Time: %d ms.", System.currentTimeMillis() - time);
         assertEquals(0, counter.getTypeCount());
         assertEquals(0, counter.getFieldCount());
         assertEquals(14, counter.getMethodCount());
@@ -122,7 +128,7 @@ public final class AnnotationDetectorTest {
         final AnnotationDetector cf = new AnnotationDetector(counter);
         cf.detect("eu.infomas"); // only this package and sub package(s) are scanned
         // 6 ms
-        if (DEBUG) System.err.printf("Time: %d ms.\n", System.currentTimeMillis() - time);
+        if (DEBUG) log("Time: %d ms.", System.currentTimeMillis() - time);
         assertEquals(0, counter.getTypeCount());
         assertEquals(0, counter.getFieldCount());
         assertEquals(14, counter.getMethodCount());

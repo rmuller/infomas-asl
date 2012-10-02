@@ -42,6 +42,7 @@ final class ClassFileIterator {
 
     private final FileIterator fileIterator;
     private ZipFileIterator zipIterator;
+    private boolean isFile;
     
     /**
      * Create a new {@code ClassFileIterator} returning all Java ClassFile files
@@ -71,11 +72,20 @@ final class ClassFileIterator {
             fileIterator.getFile().getPath() : 
             zipIterator.getEntry().getName();
     }
+
+    /**
+     * Return {@code true} if the current {@link InputStream} is reading from a
+     * plain {@link File}. Return {@code false} if the current {@link InputStream} 
+     * is reading from a ZIP File Entry.
+     */
+    public boolean isFile() {
+        return isFile;
+    }
     
     /**
      * Return the next Java ClassFile as an {@code InputStream}.
      * <br/>
-     * WARNING: Client code must not close this returned {@code InputStream}!
+     * NOTICE: Client code MUST close the returned {@code InputStream}!
      */
     public InputStream next() throws IOException {
         if (zipIterator == null) {
@@ -85,6 +95,7 @@ final class ClassFileIterator {
             } else {
                 final String name = file.getName();
                 if (name.endsWith(".class")) {
+                    isFile = true;
                     return new FileInputStream(file);
                 } else if (fileIterator.isRootFile() && endsWithIgnoreCase(name, ".jar")) {
                     zipIterator = new ZipFileIterator(file);
@@ -97,6 +108,7 @@ final class ClassFileIterator {
                 zipIterator = null;
                 return next();
             } else {
+                isFile = false;
                 return is;
             }
         }

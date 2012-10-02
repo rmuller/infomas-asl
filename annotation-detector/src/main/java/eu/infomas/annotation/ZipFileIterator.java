@@ -39,7 +39,7 @@ import java.util.zip.ZipFile;
  * @since annotation-detector 3.0.0
  */
 final class ZipFileIterator {
-
+    
     private final ZipFile zipFile;
     private final Enumeration<? extends ZipEntry> entries;
     private ZipEntry current;
@@ -59,6 +59,13 @@ final class ZipFileIterator {
             if (!current.isDirectory()) {
                 return zipFile.getInputStream(current);
             }
+        }
+        // no more entries in this ZipFile, so close ZipFile
+        try {
+            // zipFile is never null here
+            zipFile.close();
+        } catch (IOException ex) {
+            // suppress IOException, otherwise close() is called twice
         }
         return null;
     }

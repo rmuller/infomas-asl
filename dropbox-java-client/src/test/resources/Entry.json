@@ -1,0 +1,30 @@
+{
+"hash": "528dda36e3150ba28040052bbf1bfbd1",
+"thumb_exists": false,
+"bytes": 0,
+"modified": "Sat, 12 Jan 2008 23:10:10 +0000",
+"path": "/Public",
+"is_dir": true,
+"size": "0 bytes",
+"root": "dropbox",
+"contents": [
+    {
+        "thumb_exists": false,
+        "bytes": 0,
+        "modified": "Wed, 16 Jan 2008 09:11:59 +0000",
+        "path": "/Public/\u2665asdas\u2665",
+        "is_dir": true,
+        "icon": "folder",
+        "size": "0 bytes"
+    },
+    {
+        "thumb_exists": false,
+        "bytes": 4392763,
+        "modified": "Thu, 15 Jan 2009 02:52:43 +0000",
+        "path": "/Public/\u540d\u79f0\u672a\u8a2d\u5b9a\u30d5\u30a9\u30eb\u30c0.zip",
+        "is_dir": false,
+        "icon": "page_white_compressed",
+        "size": "4.2MB"
+    }],
+"icon": "folder_public"
+}

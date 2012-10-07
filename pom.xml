@@ -41,6 +41,7 @@
 
     <modules>
         <module>annotation-detector</module>
+        <module>dropbox-java-client</module>
     </modules>
 
     <inceptionYear>2011</inceptionYear>
@@ -154,5 +155,5 @@
             </plugin>
         </plugins>
     </build>
-
+    
 </project>

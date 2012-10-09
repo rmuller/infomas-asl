@@ -41,7 +41,6 @@
 
     <modules>
         <module>annotation-detector</module>
-        <module>dropbox-java-client</module>
     </modules>
 
     <inceptionYear>2011</inceptionYear>
@@ -155,5 +154,18 @@
             </plugin>
         </plugins>
     </build>
+        
+    <!-- TODO: http://code.google.com/p/maven-license-plugin/ or 
+    http://java.net/projects/glassfish/sources/svn/show/tags/glassfish-copyright-maven-plugin-1.29 
+    ?? -->
+    <profiles>
+        <profile>
+            <id>release</id>
+            <modules>
+                <module>api</module>
+                <module>impl</module>
+            </modules>
+        </profile>
+    </profiles>
     
 </project>

@@ -35,10 +35,9 @@ Version History
     </module>
     <!-- Checks that property files contain the same keys. -->
     <module name="Translation"/>
-    <!-- Checks for Headers -->
+    <!-- Checks for Headers, the value is set by maven -->
     <module name="RegexpHeader">
-        <property name="headerLocation"
-        value="https://raw.github.com/rmuller/infomas-asl/master/development/infomas-checkstyle-header.txt"/>
+        <property name="headerFile" value="${checkstyle.header.file}"/>
     </module>
     <!-- Sun: < 2000, is also default value -->
     <module name="FileLength" />

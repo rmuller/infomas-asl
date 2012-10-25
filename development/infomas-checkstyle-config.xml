@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+    "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+<!--
+infomas-checkstyle-config.xml
+
+Checkstyle configuration with basic coding conventions used at XIAM Solutions B.V.
+
+Version History
+21 jul 2004 - initial version
+30 jul 2004 - made as strict as possible
+11 aug 2004 - relaxed after internal evaluation by Vincent and Peter
+23 oct 2005 - proposed final rules, based on Checkstyle 4.0
+28 oct 2005 - FINAL (based on Checkstyle 4.0)
+15 nov 2005 - added: check on "System.out", improved check on "to do"
+01 feb 2006 - error in GenericIllegalRegexp, .printStackTrace()
+              removed MagicNumber Check
+15 jul 2009 - adapted configuration, and extended rules, based on Checkstyle 5.0
+23 oct 2012 - cleaned up & simplified a little, start using @ INFOMAS-ASL
+-->
+<module name="Checker">
+
+    <!-- Development at XIAM Solutions B.V. is always in American English -->
+    <property name="localeCountry" value="US"/>
+    <property name="localeLanguage" value="en"/>
+    <property name="charset" value="UTF-8"/>
+
+    <!-- Checks that a package.html / package-info.java file exists for each package. -->
+    <module name="JavadocPackage">
+        <property name="allowLegacy" value="true" />
+        <property name="severity" value="warning" />
+    </module>
+    <module name="NewlineAtEndOfFile">
+        <property name="lineSeparator" value="lf"/>
+    </module>
+    <!-- Checks that property files contain the same keys. -->
+    <module name="Translation"/>
+    <!-- Checks for Headers -->
+    <module name="RegexpHeader">
+        <property name="headerFile"
+        value="https://raw.github.com/rmuller/infomas-asl/master/development/infomas-checkstyle-header.txt"/>
+    </module>
+    <!-- Sun: < 2000, is also default value -->
+    <module name="FileLength" />
+    <module name="FileTabCharacter"/>
+    <module name="TreeWalker">
+        <property name="tabWidth" value="4"/>
+
+        <!-- Checks for Javadoc comments. -->
+        <!-- JavadocStyle is only checked if JavaDoc is mandatory (see
+        JavadocType. If JavaDoc comment exists it must be perfect! -->
+        <module name="JavadocStyle">
+            <property name="checkEmptyJavadoc" value="true"/>
+        </module>
+        <!-- Checks Javadoc comments for class and interface definitions. -->
+        <module name="JavadocType">
+            <property name="scope" value="protected"/>
+            <property name="allowMissingParamTags" value="true"/>
+            <property name="authorFormat" value=".+"/>
+        </module>
+        <module name="JavadocMethod">
+            <property name="scope" value="protected" />
+            <property name="allowUndeclaredRTE" value="true" />
+            <property name="allowMissingParamTags" value="true" />
+            <property name="allowMissingReturnTag" value="true" />
+            <property name="allowMissingThrowsTags" value="true" />
+            <property name="allowThrowsTagsForSubclasses" value="true" />
+            <property name="allowMissingPropertyJavadoc" value="true" />
+            <property name="severity" value="warning" />
+        </module>
+        <module name="JavadocVariable">
+            <property name="scope" value="protected"/>
+        </module>
+        <!-- Checks for Naming Conventions. -->
+        <module name="ConstantName"/>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+        <module name="StaticVariableName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+        <module name="MethodName"/>
+        <module name="PackageName">
+            <property name="format" value="^eu\.infomas(\.[a-z][a-z0-9]*)+$"/>
+        </module>
+        <module name="ParameterName"/>
+        <module name="TypeName"/>
+        <!-- Checks for imports -->
+        <module name="AvoidStarImport"/>
+        <!-- Can be configured in BOTH Eclipse and Netbeans -->
+        <module name="ImportOrder">
+            <property name="groups" value="java,javax,eu.infomas,*"/>
+            <property name="ordered" value="true"/>
+            <property name="separated" value="true"/>
+        </module>
+        <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
+        <module name="RedundantImport" />
+        <module name="UnusedImports">
+            <!-- to allow import for javadoc link tags! -->
+            <property name="severity" value="warning" />
+        </module>
+        <!-- Checks for Size Violations. -->
+        <module name="ExecutableStatementCount">
+            <property name="max" value="40" />
+            <property name="severity" value="warning" />
+        </module>
+        <module name="LineLength">
+            <property name="max" value="100"/>
+            <property name="severity" value="warning" />
+        </module>
+        <module name="MethodLength">
+            <!--
+            Checkstyle default: 150
+            Sun recommendation: maximum number of lines: one page == 60
+            Agile methods promote less than 20  -->
+            <property name="countEmpty" value="false" />
+            <property name="max" value="80" />
+            <property name="severity" value="warning" />
+        </module>
+        <module name="AnonInnerLength">
+            <property name="severity" value="warning" />
+        </module>
+        <module name="ParameterNumber">
+            <property name="severity" value="warning" />
+        </module>
+        <!-- Checks for whitespace. -->
+        <module name="EmptyForInitializerPad"/>
+        <module name="EmptyForIteratorPad">
+            <property name="option" value="space"/>
+        </module>
+        <module name="MethodParamPad"/>
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
+        <module name="OperatorWrap">
+            <!-- common practice: "nl" !! -->
+            <property name="option" value="eol"/>
+        </module>
+        <module name="ParenPad"/>
+        <module name="TypecastParenPad"/>
+        <module name="WhitespaceAfter">
+            <property name="tokens" value="COMMA, SEMI"/>
+        </module>
+        <module name="WhitespaceAround"/>
+        <!-- Modifier Checks. -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+        <!-- Checks for blocks. -->
+        <module name="EmptyBlock">
+            <property name="severity" value="warning" />
+        </module>
+        <module name="LeftCurly"/>
+        <module name="NeedBraces"/>
+        <module name="RightCurly"/>
+        <module name="AvoidNestedBlocks"/>
+        <!-- Checks for common coding problems -->
+        <module name="CovariantEquals"/>
+        <module name="DoubleCheckedLocking"/>
+        <module name="DefaultComesLast"/>
+        <module name="DeclarationOrder"/>
+        <module name="EmptyStatement">
+            <property name="severity" value="warning" />
+        </module>
+        <module name="EqualsHashCode"/>
+        <module name="ExplicitInitialization"/>
+        <module name="HiddenField">
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreSetter" value="true"/>
+        </module>
+        <module name="IllegalCatch">
+            <property name="illegalClassNames" value="java.lang.Throwable, java.lang.RuntimeException"/>
+            <property name="severity" value="warning" />
+        </module>
+        <module name="IllegalInstantiation">
+            <property name="classes" value="java.lang.Boolean"/>
+        </module>
+        <!-- native code not allowed in INFOMAS applications! -->
+        <module name="IllegalToken">
+            <property name="tokens" value="LITERAL_NATIVE"/>
+        </module>
+        <module name="IllegalType">
+            <property value="AbstractButton" name="legalAbstractClassNames"/>
+        </module>
+        <module name="InnerAssignment">
+            <!-- try to avoid -->
+            <property name="severity" value="warning" />
+        </module>
+        <module name="JUnitTestCase"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="NestedIfDepth">
+            <!-- default = 1 -->
+            <property name="max" value="3"/>
+            <property name="severity" value="warning" />
+        </module>
+        <module name="NestedTryDepth">
+            <!-- default = 1 -->
+            <property name="max" value="2"/>
+            <property name="severity" value="warning" />
+        </module>
+        <module name="RedundantThrows"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="StringLiteralEquality"/>
+        <module name="SuperClone"/>
+        <module name="SuperFinalize"/>
+        <module name="UnnecessaryParentheses"/>
+        <!-- Checks for class design. -->
+        <module name="FinalClass"/>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="InterfaceIsType"/>
+        <module name="MutableException"/>
+        <module name="ThrowsCount">
+            <property name="max" value="3"/>
+        </module>
+        <module name="VisibilityModifier">
+            <property name="protectedAllowed" value="true"/>
+        </module>
+        <!-- Metrics checks. -->
+        <module name="BooleanExpressionComplexity">
+            <property name="max" value="7"/>
+        </module>
+        <!-- Miscellaneous other checks. -->
+        <module name="ArrayTypeStyle"/>
+        <module name="RegexpSinglelineJava">
+            <property name="format" value="System\.out\.print"/>
+            <property name="ignoreComments" value="true"/>
+            <property name="message" value="System.out.print[ln]() not allowed in production quality code!"/>
+        </module>
+        <module name="RegexpSinglelineJava">
+            <property name="format" value="System\.err\.print"/>
+            <property name="ignoreComments" value="true"/>
+            <property name="message" value="System.err.print[ln]() not allowed in production quality code!"/>
+            <property name="severity" value="warning" />
+        </module>
+        <module name="RegexpSinglelineJava">
+            <property name="format" value="\.printStacktrace\(\)"/>
+            <property name="ignoreComments" value="true"/>
+            <property name="message" value=".printStacktrace() not allowed in production quality code!"/>
+        </module>
+        <module name="RegexpSinglelineJava">
+            <property name="format" value="System\.exit\(\)"/>
+            <property name="ignoreComments" value="true"/>
+            <property name="message" value="System.exit() not allowed in production quality code!"/>
+        </module>
+        <module name="RegexpSinglelineJava">
+            <property name="format" value="DEBUG\s+=\s+true"/>
+            <property name="ignoreComments" value="true"/>
+            <property name="message" value="DEBUG = true not allowed in deployed code!"/>
+        </module>
+        <!-- Prohibit the use of "old style" JUnit (3.x) -->
+        <module name="RegexpSinglelineJava">
+            <property name="format" value="import\s+junit\."/>
+            <property name="ignoreComments" value="true"/>
+            <property name="message" value="Use of JUnit 3.x not allowed, use org.junit.* packages"/>
+        </module>
+        <!-- cannot use property ignoreCase, so use regex flag -->
+        <module name="TodoComment">
+            <property name="format" value="(?i)to[_-]?do" />
+            <property name="severity" value="warning" />
+        </module>
+        <module name="UpperEll" />
+        <module name="UncommentedMain">
+            <property name="severity" value="warning" />
+        </module>
+        <module name="Indentation">
+            <!-- because of a bug in Checkstyle! -->
+            <property name="severity" value="warning" />
+        </module>
+        <!-- New CheckStyle 5 checks -->
+        <module name="AnnotationUseStyle" />
+        <module name="MissingDeprecated" />
+        <module name="MissingOverride">
+            <property name="javaFiveCompatibility" value="true"/>
+        </module>
+        <module name="NoClone" />
+        <module name="ClassTypeParameterName" />
+        <module name="MethodTypeParameterName" />
+        <module name="OuterTypeNumber"/>
+        <module name="GenericWhitespace"/>
+    </module>
+
+</module>

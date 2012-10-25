@@ -4,7 +4,8 @@ This directory contains configuration files and information for setting up a
 local development environment, compliant with the coding style and rules in use
 at XIAM Solutions B.V.
 
-## Recommended local development environment (latest version, unless otherwise noted)
+## Recommended local development environment
+Latest versions are used, unless otherwise noted.
 + Ubuntu Desktop LTS / MacOS
 + Oracle JDK, version 6
 + Netbeans IDE

@@ -11,7 +11,10 @@ Latest versions are used, unless otherwise noted.
 + Netbeans IDE
 + Maven 3 and Git available from shell
 
-## Target environment
+## Target runtime environment
+Starting early 2010 all our production environments are based on this stack.
+Primary (and preferred) OS is Debian 6. However, for EC2 we (currently) prefer
+Amazon Linux AMI (Centos).
 + 64 bit Linux (Debian 6 or Amazon Linux AMI)
 + Oracle JDK, version 6
 + Tomcat 7

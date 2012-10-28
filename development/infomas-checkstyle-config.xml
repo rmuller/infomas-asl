@@ -90,7 +90,7 @@ Version History
         <module name="AvoidStarImport"/>
         <!-- Can be configured in BOTH Eclipse and Netbeans -->
         <module name="ImportOrder">
-            <property name="option"value="bottom"/>
+            <property name="option" value="bottom"/>
             <property name="groups" value="java,javax,org.w3c,org.xml,eu.infomas,*"/>
             <property name="ordered" value="true"/>
             <property name="separated" value="true"/>

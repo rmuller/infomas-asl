@@ -42,21 +42,24 @@ final class ZipFileIterator {
     
     private final ZipFile zipFile;
     private final Enumeration<? extends ZipEntry> entries;
+    private final AnnotationDetector.ClassCheckFilter classCheckFilter;
     private ZipEntry current;
-    
-    ZipFileIterator(final File file) throws IOException {
+
+    ZipFileIterator(final File file, final AnnotationDetector.ClassCheckFilter classCheckFilter) throws IOException {
         zipFile = new ZipFile(file);
         entries = zipFile.entries();
+        this.classCheckFilter = classCheckFilter;
     }
-    
+
     public ZipEntry getEntry() {
         return current;
     }
-    
+
     public InputStream next() throws IOException {
         while (entries.hasMoreElements()) {
             current = entries.nextElement();
-            if (!current.isDirectory()) {
+            if (!current.isDirectory()
+                && classCheckFilter.isEligibleForScanning(current.getName())) {
                 return zipFile.getInputStream(current);
             }
         }

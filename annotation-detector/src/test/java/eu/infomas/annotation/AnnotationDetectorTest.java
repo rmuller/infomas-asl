@@ -1,13 +1,13 @@
 package eu.infomas.annotation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static eu.infomas.util.TestSupport.*;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 
-import org.junit.Test;
+import static eu.infomas.util.TestSupport.*;
+import static org.junit.Assert.*;
 
 @RuntimeInvisibleTestAnnotation
 // This annotation is only used to test a complex annotation type
@@ -116,7 +116,7 @@ public final class AnnotationDetectorTest {
         if (DEBUG) log("Time: %d ms.", System.currentTimeMillis() - time);
         assertEquals(0, counter.getTypeCount());
         assertEquals(0, counter.getFieldCount());
-        assertEquals(14, counter.getMethodCount());
+        assertEquals(15, counter.getMethodCount());
     }
 
     @Test
@@ -131,7 +131,7 @@ public final class AnnotationDetectorTest {
         if (DEBUG) log("Time: %d ms.", System.currentTimeMillis() - time);
         assertEquals(0, counter.getTypeCount());
         assertEquals(0, counter.getFieldCount());
-        assertEquals(14, counter.getMethodCount());
+        assertEquals(15, counter.getMethodCount());
     }
     
     /**
@@ -154,6 +154,30 @@ public final class AnnotationDetectorTest {
         assertEquals(2, counter.getTypeCount());
         assertEquals(1, counter.getFieldCount());
         assertEquals(2, counter.getMethodCount());
+    }
+
+
+    /**
+     * Test checking ClassCheckFilter behavior when excluding detection in this class
+     */
+    @Test
+    public void testClassCheckFilterExcludesThisClass() throws IOException{
+        @SuppressWarnings("unchecked")
+        final CountingReporter counter = new CountingReporter(
+                RuntimeVisibleTestAnnotations.class,
+                RuntimeVisibleTestAnnotation.class,
+                RuntimeInvisibleTestAnnotation.class);
+        // only in this package == only this class!
+        new AnnotationDetector(counter, new AnnotationDetector.ClassCheckFilter() {
+            @Override
+            public boolean isEligibleForScanning(final String fileName) {
+                return !fileName.contains(AnnotationDetectorTest.class.getSimpleName());
+            }
+        }).detect("eu.infomas.annotation");
+
+        assertEquals(0, counter.getTypeCount());
+        assertEquals(0, counter.getFieldCount());
+        assertEquals(0, counter.getMethodCount());
     }
     
 }

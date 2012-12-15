@@ -157,6 +157,19 @@ public final class AnnotationDetector {
         void reportMethodAnnotation(Class<? extends Annotation> annotation, String className, String methodName);
         
     }
+
+    public interface ClassCheckFilter {
+        /**
+         * This method will be called for each found fileName before scanning it for annotations.
+         * It might be useful to exclude specific filenames for scanning (or include only specific ones).
+         *
+         * Please notice that this method will be called many times, don't do overcomplicated computations
+         * if you don't want to slow down annotation discovery.
+         * @param fileName fileName annotation detector is about to process
+         * @return whether or not annotation detection should process this file
+         */
+        boolean isEligibleForScanning(String fileName);
+    }
     
     // Only used during development. If set to "true" debug messages are displayed.
     private static final boolean DEBUG = false;
@@ -204,13 +217,24 @@ public final class AnnotationDetector {
     // Reusing the constantPool is not needed for better performance
     private Object[] constantPool;
     private String memberName;
-    
+    private ClassCheckFilter classCheckFilter;
+
     /**
-     * Create a new {@code AnnotationDetector}, reporting the detected annotations 
+     * Create a new {@code AnnotationDetector}, reporting the detected annotations
      * to the specified {@code Reporter}.
      */
     public AnnotationDetector(final Reporter reporter) {
-        
+        this(reporter, new AlwaysTrueClassCheckFilter());
+    }
+
+    /**
+     * Create a new {@code AnnotationDetector}, reporting the detected annotations 
+     * to the specified {@code Reporter}.
+     * The specified {@code ClassCheckFilter} will be used for each file before annotation detection.
+     */
+    public AnnotationDetector(final Reporter reporter, final ClassCheckFilter classCheckFilter) {
+        this.classCheckFilter = classCheckFilter;
+
         final Class<? extends Annotation>[] a = reporter.annotations();
         annotations = new HashMap<String, Class<? extends Annotation>>(a.length);
         // map "raw" type names to Class object
@@ -237,7 +261,7 @@ public final class AnnotationDetector {
      * @see #detect(File...)
      */
     public final void detect() throws IOException {
-        detect(new ClassFileIterator());
+        detect(new ClassFileIterator(classCheckFilter));
     }
     
     /**
@@ -305,7 +329,7 @@ public final class AnnotationDetector {
      */
     public final void detect(final File... filesOrDirectories) throws IOException {
         if (DEBUG) print("detectFilesOrDirectories: %s", (Object)filesOrDirectories);
-        detect(new ClassFileIterator(filesOrDirectories));
+        detect(new ClassFileIterator(classCheckFilter, filesOrDirectories));
     }
     
     // private

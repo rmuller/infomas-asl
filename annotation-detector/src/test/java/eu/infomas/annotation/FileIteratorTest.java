@@ -1,5 +1,6 @@
-package eu.infomas.util;
+package eu.infomas.annotation;
 
+import eu.infomas.annotation.FileIterator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -22,15 +23,15 @@ public final class FileIteratorTest {
     @Test
     public void testSingleFile() throws IOException {
         FileIterator iter = new FileIterator(
-            new File("./src/test/java/eu/infomas/util/FileIteratorTest.java"));
+            new File("./src/test/java/eu/infomas/annotation/FileIteratorTest.java"));
         assertEquals(1, countFiles(iter));
     }
     
     @Test
     public void testSingleDirectory1() throws IOException {
         FileIterator iter = new FileIterator(
-            new File("./src/test/java/eu/infomas/util"));
-        assertEquals(2, countFiles(iter));
+            new File("./src/test/java/eu/infomas/annotation"));
+        assertEquals(6, countFiles(iter));
     }
     
     @Test
@@ -44,13 +45,14 @@ public final class FileIteratorTest {
     @Test
     public void testMixed() throws IOException {
         FileIterator iter = new FileIterator(
-            new File("./src/test/java/eu/infomas/util/FileIteratorTest.java"), 
+            new File("./src/test/java/eu/infomas/util/TestSupport.java"), 
             new File("./src/test/java/eu/infomas/annotation/"));
-        assertEquals(6, countFiles(iter));
+        assertEquals(7, countFiles(iter));
     }
     @Test
     public void testIsRoot1() throws IOException {
-        FileIterator iter = new FileIterator(new File("./src/test/java/eu/infomas/util/FileIteratorTest.java"));
+        FileIterator iter = new FileIterator(
+            new File("./src/test/java/eu/infomas/util/FileIteratorTest.java"));
         assertNotNull(iter.next());
         assertTrue(iter.isRootFile());
         assertNull(iter.next());
@@ -61,19 +63,17 @@ public final class FileIteratorTest {
         FileIterator iter = new FileIterator(new File("./src/test/java/eu/infomas/util/"));
         assertNotNull(iter.next());
         assertFalse(iter.isRootFile());
-        assertNotNull(iter.next());
-        assertFalse(iter.isRootFile());
         assertNull(iter.next());
     }
     
     @Test
     public void testIsRoot3() throws IOException {
         FileIterator iter = new FileIterator(
-            new File("./src/test/java/eu/infomas/util/FileIteratorTest.java"), 
+            new File("./src/test/java/eu/infomas/util/TestSupport.java"), 
             new File("./src/test/java/eu/infomas/annotation/") 
             );
         while (iter.next() != null) {
-            if ("FileIteratorTest.java".equals(iter.getFile().getName())) {
+            if ("TestSupport.java".equals(iter.getFile().getName())) {
                 assertTrue(iter.isRootFile());
             } else {
                 assertFalse(iter.getFile().toString(), iter.isRootFile());
@@ -85,10 +85,10 @@ public final class FileIteratorTest {
     public void testIsRoot4() throws IOException {
         FileIterator iter = new FileIterator(
             new File("./src/test/java/eu/infomas/annotation/"),
-            new File("./src/test/java/eu/infomas/util/FileIteratorTest.java") 
+            new File("./src/test/java/eu/infomas/util/TestSupport.java") 
             );
         while (iter.next() != null) {
-            if ("FileIteratorTest.java".equals(iter.getFile().getName())) {
+            if ("TestSupport.java".equals(iter.getFile().getName())) {
                 assertTrue(iter.isRootFile());
             } else {
                 assertFalse(iter.getFile().toString(), iter.isRootFile());

@@ -26,7 +26,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import eu.infomas.util.FileIterator;
 
 /**
  * {@code ClassFileIterator} is used to iterate over all Java ClassFile files available within

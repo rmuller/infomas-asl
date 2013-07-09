@@ -19,7 +19,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.infomas.util;
+package eu.infomas.annotation;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +44,7 @@ import java.util.NoSuchElementException;
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
  */
-public final class FileIterator {
+final class FileIterator {
 
     private final Deque<File> stack = new LinkedList<File>();
     private int rootCount;
@@ -60,7 +60,7 @@ public final class FileIterator {
      * @param filesOrDirectories Zero or more {@link File} objects, which are iterated
      * in the specified order (depth first)
      */
-    public FileIterator(final File... filesOrDirectories) {
+    FileIterator(final File... filesOrDirectories) {
         addReverse(filesOrDirectories);
         rootCount = stack.size();
     }

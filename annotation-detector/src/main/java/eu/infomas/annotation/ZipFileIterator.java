@@ -1,19 +1,17 @@
 /* ZipFileIterator.java
- * 
- ******************************************************************************
  *
- * Created: Oct 10, 2011
+ * Created: 2011-10-10 (Year-Month-Day)
  * Character encoding: UTF-8
- * 
- * Copyright (c) 2011 - XIAM Solutions B.V. The Netherlands, http://www.xiam.nl
- * 
- ********************************* LICENSE ************************************
+ *
+ ****************************************** LICENSE *******************************************
+ *
+ * Copyright (c) 2011 - 2013 XIAM Solutions B.V. (http://www.xiam.nl)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,8 +29,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * {@code ZipFileIterator} is used to iterate over all entries in a {@code zip}
- * or {@code jar} file and returning the {@link InputStream} of these entries.
+ * {@code ZipFileIterator} is used to iterate over all entries in a {@code zip} or {@code jar} 
+ * file and returning the {@link InputStream} of these entries.
+ * <p>
  * The most efficient way of iterating is used, see benchmark in test classes.
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
@@ -64,7 +63,7 @@ final class ZipFileIterator {
         try {
             // zipFile is never null here
             zipFile.close();
-        } catch (IOException ex) {
+        } catch (IOException ex) { // SUPPRESS CHECKSTYLE EmptyBlockCheck
             // suppress IOException, otherwise close() is called twice
         }
         return null;

@@ -1,19 +1,17 @@
 /* FileIterator.java
- * 
- ******************************************************************************
  *
- * Created: Oct 10, 2011
+ * Created: 2011-10-10 (Year-Month-Day)
  * Character encoding: UTF-8
- * 
- * Copyright (c) 2011 - XIAM Solutions B.V. The Netherlands, http://www.xiam.nl
- * 
- ********************************* LICENSE ************************************
+ *
+ ****************************************** LICENSE *******************************************
+ *
+ * Copyright (c) 2011 - 2013 XIAM Solutions B.V. (http://www.xiam.nl)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,9 +28,9 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 /**
- * {@code FileIterator} enables iteration over all files in a directory and all
- * its sub directories.
- * <br/>
+ * {@code FileIterator} enables iteration over all files in a directory and all its sub 
+ * directories.
+ * <p>
  * Usage:
  * <pre>
  * FileIterator iter = new FileIterator(new File("./src"));
@@ -54,7 +52,7 @@ public final class FileIterator {
     
     /**
      * Create a new {@code FileIterator} using the specified 'filesOrDirectories' as root.
-     * <br/>
+     * <p>
      * If 'filesOrDirectories' contains a file, the iterator just returns that single file. 
      * If 'filesOrDirectories' contains a directory, all files in that directory 
      * and its sub directories are returned (depth first).
@@ -116,7 +114,7 @@ public final class FileIterator {
      * Add the specified files in reverse order.
      */
     private void addReverse(final File[] files) {
-        for (int i = files.length - 1; i >=0; --i) {
+        for (int i = files.length - 1; i >= 0; --i) {
             stack.add(files[i]);
         }
     }

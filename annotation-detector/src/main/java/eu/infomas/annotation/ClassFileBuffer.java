@@ -1,19 +1,17 @@
 /* ClassFileBuffer.java
- * 
- ******************************************************************************
  *
- * Created: Oct 10, 2011
+ * Created: 2011-10-10 (Year-Month-Day)
  * Character encoding: UTF-8
- * 
- * Copyright (c) 2011 - XIAM Solutions B.V. The Netherlands, http://www.xiam.nl
- * 
- ********************************* LICENSE ************************************
+ *
+ ****************************************** LICENSE *******************************************
+ *
+ * Copyright (c) 2011 - 2013 XIAM Solutions B.V. (http://www.xiam.nl)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,29 +28,29 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * {@code ClassFileBuffer} is used by {@link AnnotationDetector} to efficiently 
- * read Java ClassFile files from an {@link InputStream} and parse the content 
- * via the {@link DataInput} interface.
- * <br/>
- * Note that Java ClassFile files can grow really big, 
+ * {@code ClassFileBuffer} is used by {@link AnnotationDetector} to efficiently read Java
+ * ClassFile files from an {@link InputStream} and parse the content via the {@link DataInput}
+ * interface.
+ * <p>
+ * Note that Java ClassFile files can grow really big,
  * {@code com.sun.corba.se.impl.logging.ORBUtilSystemException} is 128.2 kb!
  *
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
  */
 final class ClassFileBuffer implements DataInput {
-
+    
     private byte[] buffer;
     private int size; // the number of significant bytes read
     private int pointer; // the "read pointer"
-    
+
     /**
      * Create a new, empty {@code ClassFileBuffer} with the default initial capacity (8 kb).
      */
     ClassFileBuffer() {
         this(8 * 1024);
     }
-    
+
     /**
      * Create a new, empty {@code ClassFileBuffer} with the specified initial capacity.
      * The initial capacity must be greater than zero. The internal buffer will grow
@@ -66,7 +64,7 @@ final class ClassFileBuffer implements DataInput {
         }
         this.buffer = new byte[initialCapacity];
     }
-    
+
     /**
      * Clear and fill the buffer of this {@code ClassFileBuffer} with the
      * supplied byte stream.
@@ -86,7 +84,7 @@ final class ClassFileBuffer implements DataInput {
     }
 
     /**
-     * Sets the file-pointer offset, measured from the beginning of this file, 
+     * Sets the file-pointer offset, measured from the beginning of this file,
      * at which the next read or write occurs.
      */
     public void seek(final int position) throws IOException {
@@ -105,16 +103,18 @@ final class ClassFileBuffer implements DataInput {
     public int size() {
         return size;
     }
-    
+
     // DataInput
-    
+
     @Override
-    public void readFully(final byte bytes[]) throws IOException {
+    public void readFully(final byte[] bytes) throws IOException {
         readFully(bytes, 0, bytes.length);
     }
 
     @Override
-    public void readFully(final byte bytes[], final int offset, final int length) throws IOException {
+    public void readFully(final byte[] bytes, final int offset, final int length)
+        throws IOException {
+
         if (length < 0 || offset < 0 || offset + length > bytes.length) {
             throw new IndexOutOfBoundsException();
         }
@@ -138,7 +138,7 @@ final class ClassFileBuffer implements DataInput {
         }
         return buffer[pointer++];
     }
-    
+
     @Override
     public boolean readBoolean() throws IOException {
         return readByte() != 0;
@@ -164,7 +164,7 @@ final class ClassFileBuffer implements DataInput {
     public short readShort() throws IOException {
         return (short)readUnsignedShort();
     }
-    
+
     @Override
     public char readChar() throws IOException {
         return (char)readUnsignedShort();
@@ -175,9 +175,9 @@ final class ClassFileBuffer implements DataInput {
         if (pointer + 4 > size) {
             throw new EOFException();
         }
-        return (read() << 24) + 
-            (read() << 16) + 
-            (read() << 8) + 
+        return (read() << 24) +
+            (read() << 16) +
+            (read() << 8) +
             read();
     }
 
@@ -186,13 +186,13 @@ final class ClassFileBuffer implements DataInput {
         if (pointer + 8 > size) {
             throw new EOFException();
         }
-        return (read() << 56) + 
-            (read() << 48) + 
-            (read() << 40) + 
-            (read() << 32) + 
-            (read() << 24) + 
-            (read() << 16) + 
-            (read() << 8) + 
+        return (read() << 56) +
+            (read() << 48) +
+            (read() << 40) +
+            (read() << 32) +
+            (read() << 24) +
+            (read() << 16) +
+            (read() << 8) +
             read();
     }
 
@@ -209,24 +209,26 @@ final class ClassFileBuffer implements DataInput {
     /**
      * This methods throws an {@link UnsupportedOperationException} because the method
      * is deprecated and not used in the context of this implementation.
+     *
+     * @deprecated Does not support UTF-8, use readUTF() instead
      */
     @Override
     @Deprecated
     public String readLine() throws IOException {
         throw new UnsupportedOperationException("readLine() is deprecated and not supported");
     }
-    
+
     @Override
     public String readUTF() throws IOException {
         return DataInputStream.readUTF(this);
     }
-    
+
     // private
 
     private int read() {
         return buffer[pointer++] & 0xff;
     }
-    
+
     private void resizeIfNeeded() {
         if (size >= buffer.length) {
             final byte[] newBuffer = new byte[buffer.length * 2];

@@ -81,7 +81,7 @@
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
         <!-- Workaround for http://jira.codehaus.org/browse/MRESOURCES-99 -->
         <timestamp>${maven.build.timestamp}</timestamp>
-        <checkstyle.baseLocation>/home/rmuller/xiam/xiam-workspace/infomas-asl/development/</checkstyle.baseLocation>
+        <checkstyle.baseLocation>https://raw.github.com/rmuller/infomas-asl/master/development/</checkstyle.baseLocation>
         <github.global.server>github</github.global.server>
     </properties>
     

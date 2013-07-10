@@ -1,29 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
- * pom.xml
- *
- ******************************************************************************
- *
- * Created: Dec 13, 2011
- * Character encoding: UTF-8
- * 
- * Copyright (c) 2011 - XIAM Solutions B.V. The Netherlands, http://www.xiam.nl
- * 
- ********************************* LICENSE ************************************
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -31,14 +9,34 @@
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
-   
+
     <groupId>eu.infomas</groupId>
     <artifactId>infomas-asl</artifactId>
     <version>3.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>INFOMAS ASL :: Parent</name>
-    <description>Parent POM for open source projects of XIAM Solutions B.V.</description>
+    <description>Parent POM for open source projects of XIAM Solutions B.V.</description>  
+    
+    <!-- TODO: 
+    We can not use scm here with ${project.artifactId} variables, because it creates wrong 
+    URL's in sub modules. So scm must be redefined in the sub modules! 
+    -->
+    <scm>
+        <url>https://github.com/rmuller/infomas-asl</url>
+        <connection>scm:git:git://github.com/rmuller/infomas-asl.git</connection>
+        <developerConnection>scm:git:git://github.com/rmuller/infomas-asl.git</developerConnection>
+    </scm> 
+        
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/rmuller/infomas-asl/issues</url>
+    </issueManagement>
 
+    <ciManagement>
+        <system>Travis-CI</system>
+        <url>https://travis-ci.org/#!/rmuller/infomas-asl</url>
+    </ciManagement>
+    
     <modules>
         <module>annotation-detector</module>
     </modules>
@@ -72,63 +70,92 @@
     </developers>
 
     <prerequisites>
-        <!-- First stable and wide spread Maven 3 release. -->
-        <maven>3.0.2</maven>
+        <!-- First stable Maven 3 release where reporting issues are resolved. -->
+        <maven>3.0.4</maven>
     </prerequisites>
 
     <properties>
         <java.version>1.6</java.version>
-        <!-- As close as we can get for the W3C / ISO Date Time format. Due to a 
+        <!-- As close as we can get for the W3C / ISO Date Time format. Due to a
         limitation of Java's SimpleDateFormat the colon in the time zone is missing. -->
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
         <!-- Workaround for http://jira.codehaus.org/browse/MRESOURCES-99 -->
-        <timestamp>${maven.build.timestamp}</timestamp>      
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <checkstyle.baseLocation>/home/rmuller/xiam/xiam-workspace/infomas-asl/development/</checkstyle.baseLocation>
+        <github.global.server>github</github.global.server>
     </properties>
-
-    <scm>
-        <connection>scm:git:git@github.com:rmuller/infomas-asl.git</connection>
-        <developerConnection>scm:git:git@github.com:rmuller/infomas-asl.git</developerConnection>
-        <url>git@github.com:rmuller/infomas-asl.git</url>
-    </scm>
-
+    
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.9.0</version>
+            <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.8</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.9.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.4.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.15</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>2.4.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.3</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>3.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <showDeprecation>true</showDeprecation>
-                    <!-- 
+                    <!--
                     Since JDK1.3 javac ignores any optimization flags
                     Size of generated jar file:
                     16302 - default settings
                     16300 - optimize = true (?)
                     14811 - optimize = true; debug = true
+                    -->
                     <optimize>true</optimize>
                     <debug>false</debug>
-                   -->
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12.3</version>
             </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -137,6 +164,7 @@
                     <archive>
                         <manifestEntries>
                             <Build-Timestamp>${timestamp}</Build-Timestamp>
+                            <Built-By>rmuller@xiam.nl</Built-By>
                         </manifestEntries>
                         <manifest>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
@@ -145,27 +173,105 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.8.1</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <!-- uses Checkstyle 5.6 -->
+                <version>2.10</version>
+                <configuration>
+                    <consoleOutput>true</consoleOutput>
+                    <!-- build fails on errors, not on warnings -->
+                    <failsOnError>true</failsOnError>
+                    <linkXRef>false</linkXRef>
+                    <configLocation>${checkstyle.baseLocation}/infomas-checkstyle-config.xml</configLocation>
+                    <headerLocation>${checkstyle.baseLocation}/infomas-checkstyle-header.txt</headerLocation>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>checkstyle-main</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
-            </plugin>
+                <!-- ghSite:site -->
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.8</version>
+                <configuration>
+                    <message>Creating gh-pages with JavaDoc for ${project.artifactId}-${project.version}</message>
+                    <merge>false</merge>
+                    <outputDirectory>./target/site</outputDirectory>
+                    <repositoryName>infomas-asl</repositoryName>
+                    <repositoryOwner>rmuller</repositoryOwner>
+                </configuration>
+            </plugin>            
         </plugins>
     </build>
-        
-    <!-- TODO: http://code.google.com/p/maven-license-plugin/ or 
-    http://java.net/projects/glassfish/sources/svn/show/tags/glassfish-copyright-maven-plugin-1.29 
-    ?? -->
-    <profiles>
-        <profile>
-            <id>release</id>
-            <modules>
-                <module>api</module>
-                <module>impl</module>
-            </modules>
-        </profile>
-    </profiles>
-    
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>               
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <configuration>
+                    <links>
+                        <link>http://docs.oracle.com/javase/6/docs/api/</link>
+                    </links>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>                     
+            <plugin>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.3</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>jxr</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            
+            <!-- Code Quality -->
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.10</version>
+                <configuration>
+                    <!-- TODO: SuppressWithNearbyCommentFilter is ignored @ reporting (only) -->
+                    <enableRulesSummary>false</enableRulesSummary>
+                    <enableRSS>false</enableRSS>
+                    <enableSeveritySummary>false</enableSeveritySummary>
+                    <configLocation>${checkstyle.baseLocation}/infomas-checkstyle-config.xml</configLocation>
+                    <headerLocation>${checkstyle.baseLocation}/infomas-checkstyle-header.txt</headerLocation>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.15</version>
+            </plugin>            
+            <plugin>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.0.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.5.2</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
 </project>

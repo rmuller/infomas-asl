@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>CUSTOM-checkstyle:check</actionName>
+        <displayName>checkstyle:checkstyle</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>checkstyle:checkstyle</goal>
+        </goals>
+    </action>    
+    <action>
+        <actionName>CUSTOM-ghSite:site</actionName>
+        <displayName>Clean, build site and deploy to Github Pages</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>site:site</goal>
+            <goal>ghSite:site</goal>
+        </goals>
+    </action>
+</actions>

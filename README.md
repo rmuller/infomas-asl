@@ -7,10 +7,14 @@ INFOMAS ASL contains all open sourced code from the INFOMAS PCM Application Suit
 The INFOMAS PCM Application Suite is a commercial Product Content Management (also known as PIM, Product Information Management) Application. For more information, visit http://www.xiam.nl.
 
 ## Quick Facts
++ Simple API
++ Very fast!
++ Lightweight, no dependencies, only 16 kb jar
 + Language: Java 6 SE or better
 + Tested with both Oracle JDK 6 and 7 and OpenJDK 6 and 7 (Last three VM's using [Travis CI Server](https://travis-ci.org/))
-+ Build System: Maven 3
++ OSGi Bundle artifact
 + Apache License, Version 2.0
++ Build System: Maven 3
 + Maven Artifacts are available from [Central Maven](http://search.maven.org/#search%7Cga%7C1%7Cinfomas)
 
 ## Modules
@@ -35,7 +39,7 @@ Main advantages of this library compared with similar solutions are: light weigh
 
 #### Example Usage:
 Put the `annotation-detector-{version}.jar` in the class path. No other dependencies are required!
-You can either scan the complete class path or only scan specified packages (see [JavaDoc](https://github.com/rmuller/infomas-asl/blob/master/annotation-detector/src/main/java/eu/infomas/annotation/AnnotationDetector.java) for more details).
+You can either scan the complete class path or only scan specified packages (see [JavaDoc](http://rmuller.github.io/infomas-asl/annotation-detector/apidocs/index.html) for more details).
 
 ``` java
 // Scan all .class files on the class path
@@ -63,7 +67,7 @@ That's all!
 
 ## License
 
-Copyright (c) 2011 - 2012 XIAM Solutions B.V.
+Copyright (c) 2011 - 2013 XIAM Solutions B.V.
 
 Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 

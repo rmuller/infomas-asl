@@ -1,9 +1,3 @@
-/.settings/
-/annotation-detector/.settings/
-/annotation-detector/target/
-/incubator/.settings/
-/incubator/target/
-/doc/
-/nbactions.xml
-/annotation-detector/nb-configuration.xml
 /target/
+/annotation-detector/target/
+/nb-configuration.xml

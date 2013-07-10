@@ -1,9 +1,9 @@
 ^/\* ([A-Z][a-zA-Z0-9]*|package-info)\.java$
 ^ \*$
-^ \* Created:
+^ \* Created: \d{4}-\d{2}-\d{2} \(Year-Month-Day\)$
 ^ \* Character encoding: UTF-8$
 ^ \*$
-^ \*{43} LICENSE \*{47}$
+^ \*{42} LICENSE \*{43}$
 ^ \*$
 ^ \* Copyright \(c\) \d{4}( - \d{4})? XIAM Solutions B\.V\. \(http://www.xiam.nl\)$
 ^ \*$
@@ -19,5 +19,4 @@
 ^ \* See the License for the specific language governing permissions and$
 ^ \* limitations under the License\.$
 ^ \*/$
-^package
-^$
+^.+

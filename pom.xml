@@ -15,18 +15,18 @@
     <version>3.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>INFOMAS ASL :: Parent</name>
-    <description>Parent POM for open source projects of XIAM Solutions B.V.</description>  
-    
-    <!-- TODO: 
-    We can not use scm here with ${project.artifactId} variables, because it creates wrong 
-    URL's in sub modules. So scm must be redefined in the sub modules! 
+    <description>Parent POM for open source projects of XIAM Solutions B.V.</description>
+
+    <!-- TODO:
+    We can not use scm here with ${project.artifactId} variables, because it creates wrong
+    URL's in sub modules. So scm must be redefined in the sub modules!
     -->
     <scm>
         <url>https://github.com/rmuller/infomas-asl</url>
         <connection>scm:git:git://github.com/rmuller/infomas-asl.git</connection>
         <developerConnection>scm:git:git://github.com/rmuller/infomas-asl.git</developerConnection>
-    </scm> 
-        
+    </scm>
+
     <issueManagement>
         <system>GitHub Issues</system>
         <url>https://github.com/rmuller/infomas-asl/issues</url>
@@ -36,7 +36,7 @@
         <system>Travis-CI</system>
         <url>https://travis-ci.org/#!/rmuller/infomas-asl</url>
     </ciManagement>
-    
+
     <modules>
         <module>annotation-detector</module>
     </modules>
@@ -82,9 +82,12 @@
         <!-- Workaround for http://jira.codehaus.org/browse/MRESOURCES-99 -->
         <timestamp>${maven.build.timestamp}</timestamp>
         <checkstyle.baseLocation>https://raw.github.com/rmuller/infomas-asl/master/development</checkstyle.baseLocation>
+        <checkstyle.header>checkstyle-header.txt</checkstyle.header>
+        <!-- http://mevenide.codehaus.org/m2-site/mevenide2-netbeans/customizations.html -->
+        <netbeans.hint.license>apache20</netbeans.hint.license>
         <github.global.server>github</github.global.server>
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -182,8 +185,8 @@
                     <!-- build fails on errors, not on warnings -->
                     <failsOnError>true</failsOnError>
                     <linkXRef>false</linkXRef>
-                    <configLocation>${checkstyle.baseLocation}/infomas-checkstyle-config.xml</configLocation>
-                    <headerLocation>${checkstyle.baseLocation}/infomas-checkstyle-header.txt</headerLocation>
+                    <configLocation>${checkstyle.baseLocation}/checkstyle-config.xml</configLocation>
+                    <headerLocation>${checkstyle.baseLocation}/${checkstyle.header}</headerLocation>
                 </configuration>
                 <executions>
                     <execution>
@@ -207,7 +210,7 @@
                     <repositoryName>infomas-asl</repositoryName>
                     <repositoryOwner>rmuller</repositoryOwner>
                 </configuration>
-            </plugin>            
+            </plugin>
         </plugins>
     </build>
 
@@ -216,11 +219,17 @@
             <plugin>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>2.7</version>
-            </plugin>               
+            </plugin>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9.1</version>
                 <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <notree>true</notree>
+                    <noindex>true</noindex>
+                    <nohelp>true</nohelp>
                     <links>
                         <link>http://docs.oracle.com/javase/6/docs/api/</link>
                     </links>
@@ -232,10 +241,13 @@
                         </reports>
                     </reportSet>
                 </reportSets>
-            </plugin>                     
+            </plugin>
             <plugin>
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>2.3</version>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -244,7 +256,7 @@
                     </reportSet>
                 </reportSets>
             </plugin>
-            
+
             <!-- Code Quality -->
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -254,23 +266,33 @@
                     <enableRulesSummary>false</enableRulesSummary>
                     <enableRSS>false</enableRSS>
                     <enableSeveritySummary>false</enableSeveritySummary>
-                    <configLocation>${checkstyle.baseLocation}/infomas-checkstyle-config.xml</configLocation>
-                    <headerLocation>${checkstyle.baseLocation}/infomas-checkstyle-header.txt</headerLocation>
+                    <configLocation>${checkstyle.baseLocation}/checkstyle-config.xml</configLocation>
+                    <headerLocation>${checkstyle.baseLocation}/${checkstyle.header}</headerLocation>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>2.15</version>
-            </plugin>            
+            </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.0.1</version>
+                <configuration>
+                    <targetJdk>${java.version}</targetJdk>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>2.5.2</version>
             </plugin>
+            <!-- does NOT support Java 7 syntax! https://jira.codehaus.org/browse/JAVANCSS-53
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>javancss-maven-plugin</artifactId>
+                <version>2.0</version>
+            </plugin>
+            -->
         </plugins>
     </reporting>
 

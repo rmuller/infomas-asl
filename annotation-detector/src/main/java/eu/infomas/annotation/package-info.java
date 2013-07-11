@@ -21,7 +21,8 @@
  */
 /**
  * This library can be used to scan (part of) the class path for annotated classes, 
- * methods or instance variables. 
+ * methods or instance variables.
+ * <p>
  * Main advantages of this library compared with similar solutions are: 
  * <ul>
  * <li>light weight (**no dependencies**, simple API, 16 kb jar file) 
@@ -62,5 +63,16 @@
  * final AnnotationDetector cf = new AnnotationDetector(reporter);
  * cf.detect();
  * </pre>
+ * <h4>References</h4>
+ * Java Class file parsers
+ * <ul>
+ * <li><a href="http://www.jboss.org/javassist">javassist</a>
+ * <li><a href="http://asm.ow2.org">asm</a>
+ * <li><a href="http://jakarta.apache.org/bcel">Apache BCEL</a>, considered outdated
+ * <li><a href="http://www.freeinternals.org/product/javaclassfilelibrary">jCFL</a>, 
+ * free but not open source
+ * <li><a href="http://java.decompiler.free.fr">Java decompiler</a>, also works on Linux, 
+ * JAD does not!
+ * </ul>
  */
 package eu.infomas.annotation;

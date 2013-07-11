@@ -1,0 +1,15 @@
+^/\* ([A-Z][a-zA-Z0-9]*|package-info)\.java$
+^ \*$
+^ \* Created: \d{4}-\d{2}-\d{2} \(Year-Month-Day\)$
+^ \* Character encoding: UTF-8$
+^ \*$
+^ \*{42} LICENSE \*{43}$
+^ \*$
+^ \* Copyright \(c\) \d{4}( - \d{4})? XIAM Solutions B\.V\. \(http://www.xiam.nl\)$
+^ \*$
+^ \* This software is the confidential and proprietary information of$
+^ \* XIAM Solutions B\.V\. \("Confidential Information"\)\. You shall not disclose$
+^ \* such Confidential Information and shall use it only in accordance$
+^ \* with the terms of the license agreement you entered into with XIAM Solutions\.$
+^ \*/$
+^.+

@@ -23,8 +23,8 @@
     -->
     <scm>
         <url>https://github.com/rmuller/infomas-asl</url>
-        <connection>scm:git:git://github.com/rmuller/infomas-asl.git</connection>
-        <developerConnection>scm:git:git://github.com/rmuller/infomas-asl.git</developerConnection>
+        <connection>scm:git:https://github.com/rmuller/infomas-asl</connection>
+        <developerConnection>scm:git:https://github.com/rmuller/infomas-asl</developerConnection>
     </scm>
 
     <issueManagement>

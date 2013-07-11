@@ -1,6 +1,8 @@
+# travis-ci configuration for infomas-asl
 language: java
 jdk:
   - oraclejdk7
   - openjdk7
   - openjdk6
-script: mvn package
+# batch mode / trigger checkstyle
+script: mvn -B verify

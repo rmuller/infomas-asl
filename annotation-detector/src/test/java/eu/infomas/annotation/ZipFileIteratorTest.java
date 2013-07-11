@@ -8,9 +8,10 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-import static eu.infomas.util.TestSupport.*;
 
 import org.junit.Test;
+
+import static eu.infomas.util.TestSupport.*;
 
 /**
  * This class is used for simple benchmarking different ways to read a ZIP file in Java.

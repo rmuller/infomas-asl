@@ -1,13 +1,15 @@
 package eu.infomas.annotation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static eu.infomas.util.TestSupport.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import static eu.infomas.util.TestSupport.*;
 
 @RuntimeInvisibleTestAnnotation
 // This annotation is only used to test a complex annotation type

@@ -246,20 +246,23 @@ public final class AnnotationDetector {
     }
     
     /**
-     * Report all Java ClassFile files available available on the class path from 
+     * Report all Java ClassFile files available on the class path within 
      * the specified packages and sub packages.
      * 
      * @see #detect(File...)
      */
     public void detect(final String... packageNames) throws IOException {
-        final Set<File> files = new HashSet<File>();
-        for (final String packageName : packageNames) {
-            String internalPackageName = packageName.replace('.', '/');
-            if (!internalPackageName.endsWith("/")) {
-                internalPackageName = internalPackageName.concat("/");
+        final String[] pkgNameFilter = new String[packageNames.length];
+        for (int i = 0; i < pkgNameFilter.length; ++i) {
+            pkgNameFilter[i] = packageNames[i].replace('.', '/');
+            if (!pkgNameFilter[i].endsWith("/")) {
+                pkgNameFilter[i] = pkgNameFilter[i].concat("/");
             }
+        }
+        final Set<File> files = new HashSet<File>();
+        for (final String packageName : pkgNameFilter) {
             final ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            final Enumeration<URL> resourceEnum = loader.getResources(internalPackageName);
+            final Enumeration<URL> resourceEnum = loader.getResources(packageName);
             while (resourceEnum.hasMoreElements()) {
                 final URL url = resourceEnum.nextElement();
                 // Handle JBoss VFS URL's which look like (example package 'nl.dvelop'):
@@ -281,6 +284,8 @@ public final class AnnotationDetector {
                                 files.add(jarFile);
                             }
                         }
+                    } else {
+                        throw new AssertionError("Not a recognized file URL: " + url);
                     }
                 } else {
                     // Resource in Jar File
@@ -299,12 +304,12 @@ public final class AnnotationDetector {
             print("Files to scan: %s", files);
         }
         if (!files.isEmpty()) {
-            detect(files.toArray(new File[files.size()]));
+            detect(new ClassFileIterator(files.toArray(new File[files.size()]), pkgNameFilter));
         }
     }
 
     /**
-     * Report all Java ClassFile files available available from the specified files 
+     * Report all Java ClassFile files available from the specified files 
      * and/or directories, including sub directories.
      * <p>
      * Note that non-class files (files, not starting with the magic number 
@@ -314,7 +319,7 @@ public final class AnnotationDetector {
         if (DEBUG) {
             print("detectFilesOrDirectories: %s", (Object)filesOrDirectories);
         }
-        detect(new ClassFileIterator(filesOrDirectories));
+        detect(new ClassFileIterator(filesOrDirectories, null));
     }
     
     // private

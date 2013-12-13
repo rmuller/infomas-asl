@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!--
+Maven parent POM for all 'xiam.nl' and 'infomas.eu' Java based projects.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -10,7 +15,7 @@
 
     <groupId>eu.infomas</groupId>
     <artifactId>infomas-asl</artifactId>
-    <version>3.0.3-SNAPSHOT</version>
+    <version>3.0.3</version>
     <packaging>pom</packaging>
     <name>INFOMAS ASL :: Parent</name>
     <description>Parent POM for open source projects of XIAM Solutions B.V.</description>
@@ -23,8 +28,8 @@
         <url>https://github.com/rmuller/infomas-asl</url>
         <connection>scm:git:https://github.com/rmuller/infomas-asl</connection>
         <developerConnection>scm:git:https://github.com/rmuller/infomas-asl</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <issueManagement>
         <system>GitHub Issues</system>
@@ -69,8 +74,9 @@
     </developers>
 
     <prerequisites>
-        <!-- First stable Maven 3 release where reporting issues are resolved. -->
-        <maven>3.0.4</maven>
+        <!-- 3.0.4: first release where reporting issues are resolved -->
+        <!-- 3.1.1: reporting plugins use version info of plugin management -->
+        <maven>3.1.1</maven>
     </prerequisites>
 
     <properties>
@@ -80,7 +86,8 @@
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
         <!-- Workaround for http://jira.codehaus.org/browse/MRESOURCES-99 -->
         <timestamp>${maven.build.timestamp}</timestamp>
-        <checkstyle.baseLocation>https://raw.github.com/rmuller/infomas-asl/master/development</checkstyle.baseLocation>
+        <!--<checkstyle.baseLocation>https://raw.github.com/rmuller/infomas-asl/master/development</checkstyle.baseLocation>-->
+        <checkstyle.baseLocation>/home/rmuller/xiam/xiam-workspace/infomas-asl/development</checkstyle.baseLocation>
         <checkstyle.header>checkstyle-header.txt</checkstyle.header>
         <!-- http://mevenide.codehaus.org/m2-site/mevenide2-netbeans/customizations.html -->
         <netbeans.hint.license>apache20</netbeans.hint.license>
@@ -104,6 +111,7 @@
 
     <build>
         <pluginManagement>
+            <!-- TODO: http://jira.codehaus.org/browse/MSITE-516 -->
             <plugins>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
@@ -119,7 +127,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>2.4.1</version>
+                    <version>2.4.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -127,7 +135,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.15</version>
+                    <version>2.16</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
@@ -137,6 +145,23 @@
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.3</version>
+                </plugin>
+                <plugin>
+                    <!-- uses Checkstyle 5.6 -->
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>2.11</version>
+                </plugin>
+                <plugin>
+                    <!-- since 0.9: "mvn site:site" -->
+                    <groupId>com.github.github</groupId>
+                    <artifactId>site-maven-plugin</artifactId>
+                    <version>0.9</version>
+                    <configuration>
+                        <message>Creating gh-pages with JavaDoc for ${project.artifactId}-${project.version}</message>
+                        <outputDirectory>./target/site/</outputDirectory>
+                        <repositoryName>infomas-asl</repositoryName>
+                        <repositoryOwner>rmuller</repositoryOwner>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -175,10 +200,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <!-- uses Checkstyle 5.6 -->
-                <version>2.10</version>
                 <configuration>
                     <consoleOutput>true</consoleOutput>
                     <!-- build fails on errors, not on warnings -->
@@ -186,6 +208,7 @@
                     <linkXRef>false</linkXRef>
                     <configLocation>${checkstyle.baseLocation}/checkstyle-config.xml</configLocation>
                     <headerLocation>${checkstyle.baseLocation}/${checkstyle.header}</headerLocation>
+                    <excludes>eu/infomas/external/**/*.java</excludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -198,16 +221,10 @@
                 </executions>
             </plugin>
             <plugin>
-                <!-- ghSite:site -->
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
-                <version>0.8</version>
                 <configuration>
-                    <message>Creating gh-pages with JavaDoc for ${project.artifactId}-${project.version}</message>
                     <merge>false</merge>
-                    <outputDirectory>./target/site</outputDirectory>
-                    <repositoryName>infomas-asl</repositoryName>
-                    <repositoryOwner>rmuller</repositoryOwner>
                 </configuration>
             </plugin>
         </plugins>
@@ -222,6 +239,13 @@
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9.1</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -233,19 +257,12 @@
                         <link>http://docs.oracle.com/javase/6/docs/api/</link>
                     </links>
                 </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>javadoc</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
             </plugin>
             <plugin>
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>2.3</version>
                 <configuration>
-                    <aggregate>true</aggregate>
+                    <aggregate>false</aggregate>
                 </configuration>
                 <reportSets>
                     <reportSet>
@@ -259,7 +276,13 @@
             <!-- Code Quality -->
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.10</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>checkstyle</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
                 <configuration>
                     <!-- TODO: SuppressWithNearbyCommentFilter is ignored @ reporting (only) -->
                     <enableRulesSummary>false</enableRulesSummary>
@@ -271,7 +294,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.15</version>
+                <version>2.16</version>
             </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -283,7 +306,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.5.2</version>
+                <version>2.5.3</version>
             </plugin>
             <!-- does NOT support Java 7 syntax! https://jira.codehaus.org/browse/JAVANCSS-53
             <plugin>

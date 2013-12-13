@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>eu.infomas</groupId>
         <artifactId>infomas-asl</artifactId>
-        <version>3.0.3-SNAPSHOT</version>
+        <version>3.0.3</version>
         <relativePath>../</relativePath>
     </parent>
     <artifactId>annotation-detector</artifactId>
-  <version>3.1-SNAPSHOT</version>
+    <version>3.0.3</version>
     <packaging>bundle</packaging>
     <name>INFOMAS ASL :: Annotation Detector</name>
     <description>
     Fast, lightweight, OSGi compliant scanner for Java Annotations.
     </description>
 
-    <!-- this is a sub modules and uses scm, issue and ci managment from parent project -->
-        
+    <!-- this is a sub module and uses scm, issue and ci managment from the parent project -->
+
     <build>
         <plugins>
             <plugin>
@@ -30,21 +32,15 @@
                         <Bundle-DocURL>http://rmuller.github.io/${project.artifactId}</Bundle-DocURL>
                     </instructions>
                 </configuration>
-            </plugin> 
+            </plugin>
             <plugin>
-                <!-- ghSite:site -->
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
-                <version>0.8</version>
                 <configuration>
-                    <message>Creating gh-pages with JavaDoc for ${project.artifactId}-${project.version}</message>
                     <merge>true</merge>
-                    <outputDirectory>./target/site/</outputDirectory>
                     <path>annotation-detector</path>
-                    <repositoryName>infomas-asl</repositoryName>
-                    <repositoryOwner>rmuller</repositoryOwner>
                 </configuration>
-            </plugin>                         
+            </plugin>
         </plugins>
     </build>
 

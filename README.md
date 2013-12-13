@@ -34,12 +34,12 @@ Main advantages of this library compared with similar solutions are: light weigh
 <dependency>
    <groupId>eu.infomas</groupId>
    <artifactId>annotation-detector</artifactId>
-   <version>3.0.2</version>
+   <version>3.0.3</version>
 </dependency>
 ```
 
 #### Example Usage:
-Put the `annotation-detector-{version}.jar` in the class path. No other dependencies are required!
+Put the `annotation-detector-3.0.3.jar` in the class path. No other dependencies are required!
 You can either scan the complete class path or only scan specified packages (see [JavaDoc](http://rmuller.github.io/infomas-asl/annotation-detector/apidocs/index.html) for more details).
 
 ``` java

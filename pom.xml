@@ -13,7 +13,7 @@ Maven parent POM for all 'xiam.nl' and 'infomas.eu' Java based projects.
 
     <groupId>eu.infomas</groupId>
     <artifactId>infomas-asl</artifactId>
-    <version>3.0.3</version>
+    <version>3.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>INFOMAS ASL :: Parent</name>
     <description>Parent POM for open source projects of XIAM Solutions B.V.</description>
@@ -26,7 +26,7 @@ Maven parent POM for all 'xiam.nl' and 'infomas.eu' Java based projects.
         <url>https://github.com/rmuller/infomas-asl</url>
         <connection>scm:git:https://github.com/rmuller/infomas-asl</connection>
         <developerConnection>scm:git:https://github.com/rmuller/infomas-asl</developerConnection>
-        <tag>infomas-asl-3.0.3</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>

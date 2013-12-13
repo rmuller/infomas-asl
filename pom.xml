@@ -2,9 +2,7 @@
 <!--
 Maven parent POM for all 'xiam.nl' and 'infomas.eu' Java based projects.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -15,7 +13,7 @@ Maven parent POM for all 'xiam.nl' and 'infomas.eu' Java based projects.
 
     <groupId>eu.infomas</groupId>
     <artifactId>infomas-asl</artifactId>
-    <version>3.0.3-SNAPSHOT</version>
+    <version>3.0.3</version>
     <packaging>pom</packaging>
     <name>INFOMAS ASL :: Parent</name>
     <description>Parent POM for open source projects of XIAM Solutions B.V.</description>
@@ -28,7 +26,7 @@ Maven parent POM for all 'xiam.nl' and 'infomas.eu' Java based projects.
         <url>https://github.com/rmuller/infomas-asl</url>
         <connection>scm:git:https://github.com/rmuller/infomas-asl</connection>
         <developerConnection>scm:git:https://github.com/rmuller/infomas-asl</developerConnection>
-        <tag>HEAD</tag>
+        <tag>infomas-asl-3.0.3</tag>
     </scm>
 
     <issueManagement>

@@ -86,8 +86,7 @@ Maven parent POM for all 'xiam.nl' and 'infomas.eu' Java based projects.
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
         <!-- Workaround for http://jira.codehaus.org/browse/MRESOURCES-99 -->
         <timestamp>${maven.build.timestamp}</timestamp>
-        <!--<checkstyle.baseLocation>https://raw.github.com/rmuller/infomas-asl/master/development</checkstyle.baseLocation>-->
-        <checkstyle.baseLocation>/home/rmuller/xiam/xiam-workspace/infomas-asl/development</checkstyle.baseLocation>
+        <checkstyle.baseLocation>https://raw.github.com/rmuller/infomas-asl/master/development</checkstyle.baseLocation>
         <checkstyle.header>checkstyle-header.txt</checkstyle.header>
         <!-- http://mevenide.codehaus.org/m2-site/mevenide2-netbeans/customizations.html -->
         <netbeans.hint.license>apache20</netbeans.hint.license>

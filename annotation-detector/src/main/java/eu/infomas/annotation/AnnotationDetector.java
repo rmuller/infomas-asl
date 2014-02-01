@@ -25,11 +25,11 @@ import java.io.DataInput;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.net.JarURLConnection;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -324,10 +324,14 @@ public final class AnnotationDetector {
     
     // private
     
-    private File toFile(final URL url) throws UnsupportedEncodingException {
-        // do not use url.toString() or url.toExternalForm() because of the
-        // 'file:' prefix / protocol identifier
-        return new File(URLDecoder.decode(url.getFile(), "UTF-8"));
+    private File toFile(final URL url) throws MalformedURLException {
+        // only correct way to convert the URL to a File object, also see issue #16
+        // Do not use URLDecoder
+        try {
+            return new File(url.toURI());
+        } catch (URISyntaxException ex) {
+            throw new MalformedURLException(ex.getMessage());
+        }
     }
 
     private void detect(final ClassFileIterator iterator) throws IOException {

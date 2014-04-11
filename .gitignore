@@ -1,3 +1,6 @@
 /target/
 /annotation-detector/target/
 /nb-configuration.xml
+.settings/
+.classpath
+.project

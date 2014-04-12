@@ -1,6 +1,8 @@
 # travis-ci configuration for infomas-asl
 language: java
+# http://blog.travis-ci.com/2013-11-26-test-your-java-libraries-on-java-8
 jdk:
+  - oraclejdk8
   - oraclejdk7
   - openjdk7
   - openjdk6

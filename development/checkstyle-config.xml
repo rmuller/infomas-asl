@@ -20,7 +20,7 @@ Version History
 12 apr 2014 - FINAL (based on Checkstyle 5.7). 
               Relaxed: FinalLocalVariable
               Stricter: IllegalCatch
-              Added: SuppressWarningsFilter
+              Added: SuppressWarningsFilter, SuppressionFilter
               Removed: SuppressWithNearbyCommentFilter (replaced by SuppressWarningsFilter)
 -->
 <module name="Checker">
@@ -53,7 +53,10 @@ Version History
     <module name="FileTabCharacter"/>
 
     <module name="SuppressWarningsFilter" />
-    
+    <module name="SuppressionFilter">
+        <property name="file" value="checkstyle-suppressions.xml" />
+    </module>
+            
     <module name="TreeWalker">
         <property name="tabWidth" value="4"/>
         <module name="FileContentsHolder"/>

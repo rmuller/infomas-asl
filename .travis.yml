@@ -1,4 +1,4 @@
-# travis-ci configuration for infomas-asl
+# travis-ci (https://travis-ci.org) configuration for eu.infomas:infomas-asl
 language: java
 # http://blog.travis-ci.com/2013-11-26-test-your-java-libraries-on-java-8
 jdk:

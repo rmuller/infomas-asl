@@ -2,9 +2,10 @@
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
     "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 <!--
-infomas-checkstyle-config.xml
+checkstyle-config.xml
 
 Checkstyle configuration with basic coding conventions used at XIAM Solutions B.V.
+Mandatory for all "nl.xiam" and "eu.infomas" packages!
 
 Version History
 21 jul 2004 - initial version
@@ -16,11 +17,17 @@ Version History
 15 jul 2009 - adapted configuration, and extended rules, based on Checkstyle 5.0
 23 oct 2012 - cleaned up & simplified a little, start using @ INFOMAS-ASL
 11 jul 2013 - FINAL (based on Checkstyle 5.6)
+12 apr 2014 - FINAL (based on Checkstyle 5.7). 
+              Relaxed: FinalLocalVariable
+              Stricter: IllegalCatch
+              Added: SuppressWarningsFilter
+              Removed: SuppressWithNearbyCommentFilter (replaced by SuppressWarningsFilter)
 -->
 <module name="Checker">
 
-    <!-- There is no check for:
-    empty consecutive lines, http://checkstyle.2069334.n4.nabble.com/Empty-line-check-td2070206.html
+    <!-- 
+    There is no check for: empty consecutive lines, see
+    http://checkstyle.2069334.n4.nabble.com/Empty-line-check-td2070206.html
     -->
 
     <!-- Development at XIAM Solutions B.V. is always in American English -->
@@ -42,14 +49,16 @@ Version History
     <module name="RegexpHeader">
         <property name="headerFile" value="${checkstyle.header.file}"/>
     </module>
-    <!-- Sun: < 2000, is also default value -->
     <module name="FileLength" />
     <module name="FileTabCharacter"/>
-    <module name="SuppressWithNearbyCommentFilter"/>
 
+    <module name="SuppressWarningsFilter" />
+    
     <module name="TreeWalker">
         <property name="tabWidth" value="4"/>
         <module name="FileContentsHolder"/>
+
+        <module name="SuppressWarningsHolder" />
 
         <!-- Annotations -->
         <module name="AnnotationUseStyle" />
@@ -87,7 +96,12 @@ Version History
         <module name="EqualsAvoidNull"/>
         <module name="EqualsHashCode"/>
         <module name="FinalLocalVariable">
-            <property name="tokens" value="VARIABLE_DEF,PARAMETER_DEF"/>
+            <!-- 
+            PARAMETER_DEF is *very* controversial, so removed from the check.
+            VARIABLE_DEF now only warning.
+            -->
+            <property name="tokens" value="VARIABLE_DEF"/>
+            <property name="severity" value="warning" />
         </module>
         <module name="HiddenField">
             <property name="tokens" value="VARIABLE_DEF"/>
@@ -132,8 +146,9 @@ Version History
         <module name="SuperClone"/>
         <module name="SuperFinalize"/>
         <module name="IllegalCatch">
-            <property name="illegalClassNames" value="java.lang.Throwable, java.lang.RuntimeException"/>
-            <property name="severity" value="warning" />
+            <!-- MUST be annotated with @SuppressWarnings("illegalcatch") -->
+            <property name="illegalClassNames" 
+                      value="java.lang.Throwable, java.lang.RuntimeException"/>
         </module>
         <module name="IllegalThrows">
             <property name="illegalClassNames" value="java.lang.Throwable,java.lang.Error" />
@@ -250,34 +265,40 @@ Version History
         <module name="RegexpSinglelineJava">
             <property name="format" value="System\.out\.print"/>
             <property name="ignoreComments" value="true"/>
-            <property name="message" value="System.out.print[ln]() not allowed in production quality code!"/>
+            <property name="message" 
+                      value="System.out.print[ln]() not allowed in production quality code!"/>
         </module>
         <module name="RegexpSinglelineJava">
             <property name="format" value="System\.err\.print"/>
             <property name="ignoreComments" value="true"/>
-            <property name="message" value="System.err.print[ln]() not allowed in production quality code!"/>
+            <property name="message" 
+                      value="System.err.print[ln]() not allowed in production quality code!"/>
             <property name="severity" value="warning" />
         </module>
         <module name="RegexpSinglelineJava">
             <property name="format" value="\.printStacktrace\(\)"/>
             <property name="ignoreComments" value="true"/>
-            <property name="message" value=".printStacktrace() not allowed in production quality code!"/>
+            <property name="message" 
+                      value=".printStacktrace() not allowed in production quality code!"/>
         </module>
         <module name="RegexpSinglelineJava">
             <property name="format" value="System\.exit\(\)"/>
             <property name="ignoreComments" value="true"/>
-            <property name="message" value="System.exit() not allowed in production quality code!"/>
+            <property name="message" 
+                      value="System.exit() not allowed in production quality code!"/>
         </module>
         <module name="RegexpSinglelineJava">
             <property name="format" value="DEBUG\s+=\s+true"/>
             <property name="ignoreComments" value="true"/>
-            <property name="message" value="DEBUG = true not allowed in deployed code!"/>
+            <property name="message" 
+                      value="DEBUG = true not allowed in deployed code!"/>
         </module>
         <!-- Prohibit the use of "old style" JUnit (3.x) -->
         <module name="RegexpSinglelineJava">
             <property name="format" value="import\s+junit\."/>
             <property name="ignoreComments" value="true"/>
-            <property name="message" value="Use of JUnit 3.x not allowed, use org.junit.* packages"/>
+            <property name="message" 
+                      value="Use of JUnit 3.x not allowed, use org.junit.* packages"/>
         </module>
 
         <!-- Size Violations -->

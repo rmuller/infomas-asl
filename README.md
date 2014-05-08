@@ -11,7 +11,8 @@ The INFOMAS PCM Application Suite is a commercial Product Content Management (al
 + Very fast!
 + Lightweight, no dependencies, only 16 kb jar
 + Language: Java 6 SE or better
-+ Tested with both Oracle JDK 6 and 7 and OpenJDK 6 and 7 (Last three VM's using [Travis CI Server](https://travis-ci.org/))
++ Tested with Oracle JDK 6, 7, 8 and OpenJDK 6 and 7 (Last four VM's using 
+  [Travis CI Server](https://travis-ci.org/))
 + OSGi Bundle artifact
 + Apache License, Version 2.0
 + Build System: Maven 3
@@ -25,8 +26,11 @@ Currently INFOMAS ASL contains the following modules:
 + More to come ...
 
 ### annotation-detector
-This library can be used to scan (part of) the class path for annotated classes, methods or instance variables.
-Main advantages of this library compared with similar solutions are: light weight (**no dependencies**, simple API, **16 kb jar file**) and **very fast** (fastest annotation detection library as far as I know).
+This library can be used to scan (part of) the class path for annotated classes, methods or 
+instance variables.
+Main advantages of this library compared with similar solutions are: light weight 
+(**no dependencies**, simple API, **16 kb jar file**) and **very fast** 
+(fastest annotation detection library as far as I know).
 
 #### Maven configuration:
 
@@ -34,13 +38,15 @@ Main advantages of this library compared with similar solutions are: light weigh
 <dependency>
    <groupId>eu.infomas</groupId>
    <artifactId>annotation-detector</artifactId>
-   <version>3.0.3</version>
+   <version>3.0.4</version>
 </dependency>
 ```
 
 #### Example Usage:
-Put the `annotation-detector-3.0.3.jar` in the class path. No other dependencies are required!
-You can either scan the complete class path or only scan specified packages (see [JavaDoc](http://rmuller.github.io/infomas-asl/annotation-detector/apidocs/index.html) for more details).
+Put the `annotation-detector-3.0.4.jar` in the class path. No other dependencies are required!
+You can either scan the complete class path or only scan specified packages 
+(see [JavaDoc](http://rmuller.github.io/infomas-asl/annotation-detector/apidocs/index.html) 
+for more details).
 
 ``` java
 // Scan all .class files on the class path
@@ -68,7 +74,7 @@ That's all!
 
 ## License
 
-Copyright (c) 2011 - 2013 XIAM Solutions B.V.
+Copyright (c) 2011 - 2014 XIAM Solutions B.V.
 
 Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 

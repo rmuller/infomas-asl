@@ -11,9 +11,9 @@ guaranteed to work.
 + Oracle JDK, version 6u45 for building the open source artifacts
 + Oracle JDK, version 7u51 (for all other purposes)
 + Maven 3 (3.1.1) and Git 1.7 (1.7.9.5) available from shell
-+ Netbeans IDE 7.3.1
++ Netbeans IDE 8.0
 
-## Target runtime environment
+## Target runtime environment (PRODUCTION)
 Starting early 2010 all our server (production) environments are based on this stack. 
 Currently (April 2014) this stack consists of:
 + Primary (and preferred) OS is Debian 7, also when using AWS EC2.

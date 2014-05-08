@@ -19,7 +19,8 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
     <packaging>pom</packaging>
     <name>INFOMAS ASL :: Parent</name>
     <description>Parent POM for open source projects of XIAM Solutions B.V.</description>
-
+    <url>http://rmuller.github.io/infomas-asl/annotation-detector/</url>
+    
     <!-- TODO:
     We can not use scm here with ${project.artifactId} variables, because it creates wrong
     URL's in sub modules. So scm must be redefined in the sub modules!
@@ -87,8 +88,9 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
         <!-- Workaround for http://jira.codehaus.org/browse/MRESOURCES-99 -->
         <timestamp>${maven.build.timestamp}</timestamp>
         <checkstyle.baseLocation>https://raw.github.com/rmuller/infomas-asl/master/development</checkstyle.baseLocation>
-        <!--<checkstyle.baseLocation>development</checkstyle.baseLocation>-->
         <checkstyle.header>checkstyle-header.txt</checkstyle.header>
+        <!-- 2.12 uses Checkstyle 5.7 -->
+        <checkstyle.version>2.12.1</checkstyle.version>
         <!-- http://mevenide.codehaus.org/m2-site/mevenide2-netbeans/customizations.html -->
         <netbeans.hint.license>apache20</netbeans.hint.license>
         <github.global.server>github</github.global.server>
@@ -147,9 +149,8 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
                     <version>3.3</version>
                 </plugin>
                 <plugin>
-                    <!-- 2.12 uses Checkstyle 5.7 -->
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>2.12</version>
+                    <version>${checkstyle.version}</version>
                 </plugin>
                 <plugin>
                     <!-- since 0.9: "mvn site:site" -->
@@ -276,6 +277,7 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
             <!-- Code Quality -->
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle.version}</version>
                 <reportSets>
                     <reportSet>
                         <reports>

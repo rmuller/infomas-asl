@@ -5,12 +5,12 @@
     <parent>
         <groupId>eu.infomas</groupId>
         <artifactId>infomas-asl</artifactId>
-        <version>3.0.4-SNAPSHOT</version>
+        <version>3.0.4</version>
         <relativePath>../</relativePath>
     </parent>
     
     <artifactId>annotation-detector</artifactId>
-    <version>3.0.4-SNAPSHOT</version>
+    <version>3.0.4</version>
     <packaging>bundle</packaging>
     <name>INFOMAS ASL :: Annotation Detector</name>
     <description>

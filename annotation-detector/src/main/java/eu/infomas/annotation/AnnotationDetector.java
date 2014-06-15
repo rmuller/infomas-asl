@@ -801,8 +801,8 @@ public final class AnnotationDetector implements Builder, Cursor {
             final ClassLoader cl = Thread.currentThread().getContextClassLoader();
             return Class.forName(typeName, false, cl);
         } catch (ClassNotFoundException ex) {
-            throw new AssertionError("Cannot load type '" + typeName +
-                "', scanned file not on class path? ", ex);
+            throw assertionError(
+                "Cannot load type '%s', scanned file not on class path? (%s)", typeName, ex);
         }
     }
 

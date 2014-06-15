@@ -39,7 +39,7 @@ import java.io.InputStream;
  * @since annotation-detector 3.0.0
  */
 final class ClassFileBuffer implements DataInput {
-    
+
     private byte[] buffer;
     private int size; // the number of significant bytes read
     private int pointer; // the "read pointer"

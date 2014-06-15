@@ -1,161 +1,147 @@
 package eu.infomas.annotation;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.List;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
-import static eu.infomas.util.TestSupport.*;
-
+@RuntimeVisibleTestAnnotation(name = "On class level")
 @RuntimeInvisibleTestAnnotation
-// This annotation is only used to test a complex annotation type
+// This annotation is used to test a complex annotation type
 @RuntimeVisibleTestAnnotations({
     @RuntimeVisibleTestAnnotation(name="a"),
     @RuntimeVisibleTestAnnotation(name="b")
 })
 public final class AnnotationDetectorTest {
-    
-    private static final boolean DEBUG = false;
-    
-    @SuppressWarnings("unused") // used for testing only
-    @RuntimeVisibleTestAnnotation
-    private String fieldWithAnnotation;
-    
-    static class CountingReporter 
-        implements AnnotationDetector.TypeReporter,  AnnotationDetector.MethodReporter, AnnotationDetector.FieldReporter {
 
-        private final Class<? extends Annotation>[] annotations;
-        private int typeCount;
-        private int fieldCount;
-        private int methodCount;
-        
-        CountingReporter(Class<? extends Annotation>... annotations) {
-            this.annotations = annotations;
-        }
-        
-        public final Class<? extends Annotation>[] annotations() {
-            return annotations;
-        }
-        
-        public final void reportTypeAnnotation(Class<? extends Annotation> annotation, String className) {
-            ++typeCount;
-            if (DEBUG) System.out.printf("%d reportTypeAnnotation on type '%s': @%s\n", 
-                typeCount, className, annotation.getName());
-        }
+    /** Used to test {@link AnnotationDetector#getField() }. */
+    @RuntimeVisibleTestAnnotation(name = "test-field")
+    private int testField;
 
-        @Override
-        public void reportFieldAnnotation(Class<? extends Annotation> annotation, 
-            String className, String fieldName) {
-            
-            ++fieldCount;
-            if (DEBUG) System.out.printf("%d reportFieldAnnotation on field '%s#%s': @%s\n", 
-                fieldCount, className, fieldName, annotation.getName());
-        }
-        
-        public final void reportMethodAnnotation(Class<? extends Annotation> annotation, 
-            String className, String methodName) {
-            
-            ++methodCount;
-            if (DEBUG) System.out.printf("%d reportMethodAnnotation on method '%s#%s': @%s\n", 
-                methodCount, className, methodName, annotation.getName());
-        }
-        
-        public final int getTypeCount() {
-            return typeCount;
-        }
-        
-        public int getFieldCount() {
-            return fieldCount;
-        }
-        
-        public final int getMethodCount() {
-            return methodCount;
-        }
-
-    }
-    
-    // rt.jar is our test file: always available when running the unit tests 
-    // and BIG (about 50MB). Number of .class files: 17436 @ Java 6 update 26
-    private static final File RT_JAR = new File(new File(System.getProperty("java.home")), "lib/rt.jar");
-
-    // Mainly used as benchmark (timing) method
-    @Test
-    public void testClassPathScannerRT() throws IOException {
-        for (int i = 0; i < 6; ++i) {
-            final long time = System.currentTimeMillis();
-            final CountingReporter counter = new CountingReporter(Deprecated.class);
-            final AnnotationDetector cf = new AnnotationDetector(counter);
-            // Scan all Java Class Files in the specified files (i.e. rt.jar)
-            cf.detect(RT_JAR); // scan specific files and directories
-            if (i == 5) {
-                // report, first 5 iterations where for warming up VM
-                // java-6-oracle (u26): Time: 255 ms. Type Count: 66, Method Count: 395
-                // java-7-oracle (u7): Time: 315 ms. Type Count: 83, Method Count: 435
-                // java-7-openjdk (u7): Time: 994 ms. Type Count: 70, Method Count: 427
-                log("Time: %d ms. Type Count: %d, Method Count: %d", 
-                    System.currentTimeMillis() - time, counter.getTypeCount(), 
-                    counter.methodCount);
-                
-                // we cannot use the returned count as useful value, because it differs from 
-                // JDK version to JDK version, but The Deprecated class must be detected
-                assertTrue(counter.getTypeCount() > 0);                
-            }
-        }
+    /** Used to test {@link AnnotationDetector#getMethod() }. */
+    @RuntimeVisibleTestAnnotation(name = "test-method")
+    public void idiot(
+        boolean z, char c, byte b, short s, int i, long j, float f, double d, // primitives
+        String str, int[] a, // basic object, enum and array
+        int[][] ia, String[] stra
+        ) throws IOException {
+        // do nothing, just for parsing the method descriptor
     }
 
     @Test
-    public void testMethodAnnotationsOnCompleteClasspath() throws IOException {
-        final long time = System.currentTimeMillis();
+    public void testOnType() throws IOException {
+        List<Class<?>> types = AnnotationDetector.scanClassPath()
+            .forAnnotations(RuntimeVisibleTestAnnotation.class)
+            .collect(new ReporterFunction<Class<?>>() {
 
-        final CountingReporter counter = new CountingReporter(Test.class);
-        final AnnotationDetector cf = new AnnotationDetector(counter);
-        cf.detect(); // complete class path is scanned
-        // 120 ms
-        if (DEBUG) log("Time: %d ms.", System.currentTimeMillis() - time);
-        assertEquals(0, counter.getTypeCount());
-        assertEquals(0, counter.getFieldCount());
-        assertEquals(14, counter.getMethodCount());
+                @Override
+                public Class<?> report(Cursor cursor) {
+                    return cursor.getType();
+                }
+
+            });
+        //System.out.println(types);
+        assertEquals(1, types.size());
+        assertSame(AnnotationDetectorTest.class, types.get(0));
     }
 
     @Test
-    public void testMethodAnnotationsPackageOnly() throws IOException {
-        final long time = System.currentTimeMillis();
+    public void testOnMethod() throws IOException {
+        List<Method> methods = AnnotationDetector.scanClassPath("eu.infomas")
+            .forAnnotations(RuntimeVisibleTestAnnotation.class)
+            .on(ElementType.METHOD)
+            .filter(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(thisClassName());
+                }
+            })
+            .collect(new ReporterFunction<Method>() {
 
-        @SuppressWarnings("unchecked")
-        final CountingReporter counter = new CountingReporter(Test.class);
-        final AnnotationDetector cf = new AnnotationDetector(counter);
-        cf.detect("eu.infomas"); // only this package and sub package(s) are scanned
-        // 6 ms
-        if (DEBUG) log("Time: %d ms.", System.currentTimeMillis() - time);
-        assertEquals(0, counter.getTypeCount());
-        assertEquals(0, counter.getFieldCount());
-        assertEquals(14, counter.getMethodCount());
+                @Override
+                public Method report(Cursor cursor) {
+                    return cursor.getMethod();
+                }
+
+            });
+
+        //System.out.println(methods);
+        assertEquals(1, methods.size());
+        assertEquals(
+            "public void eu.infomas.annotation.AnnotationDetectorTest.idiot(" +
+            "boolean,char,byte,short,int,long,float,double,java.lang.String,int[],int[][]," +
+            "java.lang.String[]) throws java.io.IOException", methods.get(0).toString());
     }
-    
-    /**
-     * Test the more complex annotation on this class (RuntimeVisibleTestAnnotations).
-     * Ensure that both visible and invisible annotations are reported.
-     */
+
     @Test
-    @RuntimeVisibleTestAnnotation
-    @RuntimeInvisibleTestAnnotation
-    public void testTestComplexAnnotations() throws IOException {
-        
-        @SuppressWarnings("unchecked")
-        final CountingReporter counter = new CountingReporter(
-            RuntimeVisibleTestAnnotations.class,
-            RuntimeVisibleTestAnnotation.class,
-            RuntimeInvisibleTestAnnotation.class);
-        // only in this package == only this class!
-        new AnnotationDetector(counter).detect("eu.infomas.annotation");
-        
-        assertEquals(2, counter.getTypeCount());
-        assertEquals(1, counter.getFieldCount());
-        assertEquals(2, counter.getMethodCount());
+    public void testField() throws IOException {
+        List<Field> fields = AnnotationDetector.scanClassPath("eu.infomas.annotation")
+            .forAnnotations(RuntimeVisibleTestAnnotation.class)
+            .on(ElementType.FIELD)
+            .filter(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(thisClassName());
+                }
+            })
+            .collect(new ReporterFunction<Field>() {
+
+                @Override
+                public Field report(Cursor cursor) {
+                    return cursor.getField();
+                }
+
+            });
+
+        System.out.println(fields);
+        assertEquals(1, fields.size());
+        assertEquals(
+            "private int eu.infomas.annotation.AnnotationDetectorTest.testField",
+            fields.get(0).toString());
     }
-    
+
+    @Test
+    public void testLambdas() throws IOException {
+        List<Class<?>> types = AnnotationDetector.scanClassPath()
+            .forAnnotations(RuntimeVisibleTestAnnotation.class)
+            .collect(Cursor::getType);
+
+        assertEquals(1, types.size());
+        assertSame(AnnotationDetectorTest.class, types.get(0));
+
+        List<Method> methods = AnnotationDetector.scanClassPath("eu.infomas")
+            .forAnnotations(RuntimeVisibleTestAnnotation.class)
+            .on(ElementType.METHOD)
+            .filter((File dir, String name) -> name.endsWith("Test.class"))
+            .collect(Cursor::getMethod);
+
+        assertEquals(1, methods.size());
+        assertEquals("idiot", methods.get(0).getName());
+        assertEquals(void.class, methods.get(0).getReturnType());
+        assertEquals("test-method", methods.get(0)
+            .getAnnotation(RuntimeVisibleTestAnnotation.class).name());
+
+        final Class<RuntimeVisibleTestAnnotation> atype = RuntimeVisibleTestAnnotation.class;
+        List<String> names = AnnotationDetector.scanClassPath("eu.infomas")
+            .forAnnotations(atype)
+            .on(ElementType.METHOD)
+            .filter((File dir, String name) -> name.endsWith("Test.class"))
+            .collect(detector -> detector.getAnnotation(atype).name());
+
+        assertEquals(1, names.size());
+        assertEquals("test-method", names.get(0));
+    }
+
+    private String thisClassName() {
+        return getClass().getSimpleName() + ".class";
+    }
+
 }

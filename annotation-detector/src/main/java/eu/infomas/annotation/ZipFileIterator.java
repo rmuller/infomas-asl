@@ -21,6 +21,8 @@
  */
 package eu.infomas.annotation;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -40,6 +42,7 @@ import java.util.zip.ZipFile;
  */
 final class ZipFileIterator {
 
+    private final File file;
     private final ZipFile zipFile;
     private final String[] entryNameFilter;
     private final Enumeration<? extends ZipEntry> entries;
@@ -48,13 +51,14 @@ final class ZipFileIterator {
 
     /**
      * Create a new {@code ZipFileIterator} instance.
-     * 
+     *
      * @param zipFile The ZIP file used to iterate over all entries
      * @param entryNameFilter (optional) file name filter. Only entry names starting with
      * one of the specified names in the filter are returned
      */
-    ZipFileIterator(final ZipFile zipFile, final String[] entryNameFilter) throws IOException {
-        this.zipFile = zipFile;
+    ZipFileIterator(final File file, final String[] entryNameFilter) throws IOException {
+        this.file = file;
+        this.zipFile = new ZipFile(file);
         this.entryNameFilter = entryNameFilter;
 
         this.entries = zipFile.entries();
@@ -65,10 +69,10 @@ final class ZipFileIterator {
     }
 
     @SuppressWarnings("emptyblock")
-    public InputStream next() throws IOException {
+    public InputStream next(final FilenameFilter filter) throws IOException {
         while (entries.hasMoreElements()) {
             current = entries.nextElement();
-            if (accept(current)) {
+            if (filter == null || accept(current, filter)) {
                 return zipFile.getInputStream(current);
             }
         }
@@ -82,16 +86,19 @@ final class ZipFileIterator {
         return null;
     }
 
-    private boolean accept(final ZipEntry entry) {
+    private boolean accept(final ZipEntry entry, final FilenameFilter filter) {
         if (entry.isDirectory()) {
             return false;
         }
-        if (entryNameFilter == null) {
-            return true;
-        }
-        for (final String filter : entryNameFilter) {
-            if (entry.getName().startsWith(filter)) {
+        final String name = entry.getName();
+        if (name.endsWith(".class") && filter.accept(file, name)) {
+            if (entryNameFilter == null) {
                 return true;
+            }
+            for (final String entryName : entryNameFilter) {
+                if (name.startsWith(entryName)) {
+                    return true;
+                }
             }
         }
         return false;

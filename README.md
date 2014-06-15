@@ -14,6 +14,8 @@ The library size increased from 16 kB to 20 kB.
 This version is not (yet) released to Maven Central, so if you disagree with some changes or 
 have better ideas, please let us know!
 
+See (git) branche "release 3.1". 
+
 Changes (3.1.0-SNAPSHOT):
 + More fluent API, builder style
 + Made API Java 8 friendly (using Functional interfaces / SAM's)
@@ -60,7 +62,7 @@ Main advantages of this library compared with similar solutions are: light weigh
 ```
 
 #### Example Usage (3.0.x versions):
-Put the `annotation-detector-3.0.x.jar` in the class path. No other dependencies are required!
+Put the `annotation-detector-3.0.x.jar` on the class path. No other dependencies are required!
 You can either scan the complete class path or only scan specified packages or Files
 (see [JavaDoc](http://rmuller.github.io/infomas-asl/annotation-detector/apidocs/index.html) 
 for more details).
@@ -90,7 +92,7 @@ cf.detect();
 That's all!
 
 #### Example Usage (3.1.x versions):
-Put the `annotation-detector-3.1.x.jar` in the class path. No other dependencies are required!
+Put the `annotation-detector-3.1.x.jar` on the class path. No other dependencies are required!
 You can either scan the complete class path or only scan specified packages or Files
 (see [JavaDoc](http://rmuller.github.io/infomas-asl/annotation-detector/apidocs/index.html) 
 for more details).

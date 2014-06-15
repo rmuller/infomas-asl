@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import static eu.infomas.util.TestSupport.log;
 
@@ -48,7 +49,8 @@ public final class PerformanceTest {
                 });
             // Oracle JDK 6_u45: 196 MB/s with java-6-sun JDK
             // Oracle JDK 8_u05: 168 MB/s with java-6-sun JDK
-            assertEquals(395, count.get());
+            //assertEquals(395, count.get());
+            assertTrue(count.get() > 300);
             time = System.currentTimeMillis() - time;
             if (i > 9) {
                 total += time;

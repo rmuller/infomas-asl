@@ -108,37 +108,37 @@ public final class AnnotationDetectorTest {
             fields.get(0).toString());
     }
 
-    @Test
-    public void testLambdas() throws IOException {
-        List<Class<?>> types = AnnotationDetector.scanClassPath()
-            .forAnnotations(RuntimeVisibleTestAnnotation.class)
-            .collect(Cursor::getType);
-
-        assertEquals(1, types.size());
-        assertSame(AnnotationDetectorTest.class, types.get(0));
-
-        List<Method> methods = AnnotationDetector.scanClassPath("eu.infomas")
-            .forAnnotations(RuntimeVisibleTestAnnotation.class)
-            .on(ElementType.METHOD)
-            .filter((File dir, String name) -> name.endsWith("Test.class"))
-            .collect(Cursor::getMethod);
-
-        assertEquals(1, methods.size());
-        assertEquals("idiot", methods.get(0).getName());
-        assertEquals(void.class, methods.get(0).getReturnType());
-        assertEquals("test-method", methods.get(0)
-            .getAnnotation(RuntimeVisibleTestAnnotation.class).name());
-
-        final Class<RuntimeVisibleTestAnnotation> atype = RuntimeVisibleTestAnnotation.class;
-        List<String> names = AnnotationDetector.scanClassPath("eu.infomas")
-            .forAnnotations(atype)
-            .on(ElementType.METHOD)
-            .filter((File dir, String name) -> name.endsWith("Test.class"))
-            .collect(detector -> detector.getAnnotation(atype).name());
-
-        assertEquals(1, names.size());
-        assertEquals("test-method", names.get(0));
-    }
+//    @Test
+//    public void testLambdas() throws IOException {
+//        List<Class<?>> types = AnnotationDetector.scanClassPath()
+//            .forAnnotations(RuntimeVisibleTestAnnotation.class)
+//            .collect(Cursor::getType);
+//
+//        assertEquals(1, types.size());
+//        assertSame(AnnotationDetectorTest.class, types.get(0));
+//
+//        List<Method> methods = AnnotationDetector.scanClassPath("eu.infomas")
+//            .forAnnotations(RuntimeVisibleTestAnnotation.class)
+//            .on(ElementType.METHOD)
+//            .filter((File dir, String name) -> name.endsWith("Test.class"))
+//            .collect(Cursor::getMethod);
+//
+//        assertEquals(1, methods.size());
+//        assertEquals("idiot", methods.get(0).getName());
+//        assertEquals(void.class, methods.get(0).getReturnType());
+//        assertEquals("test-method", methods.get(0)
+//            .getAnnotation(RuntimeVisibleTestAnnotation.class).name());
+//
+//        final Class<RuntimeVisibleTestAnnotation> atype = RuntimeVisibleTestAnnotation.class;
+//        List<String> names = AnnotationDetector.scanClassPath("eu.infomas")
+//            .forAnnotations(atype)
+//            .on(ElementType.METHOD)
+//            .filter((File dir, String name) -> name.endsWith("Test.class"))
+//            .collect(detector -> detector.getAnnotation(atype).name());
+//
+//        assertEquals(1, names.size());
+//        assertEquals("test-method", names.get(0));
+//    }
 
     private String thisClassName() {
         return getClass().getSimpleName() + ".class";

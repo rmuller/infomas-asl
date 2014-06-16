@@ -10,11 +10,11 @@
     </parent>
     
     <artifactId>annotation-detector</artifactId>
-    <version>3.0.5-SNAPSHOT</version>
+    <version>3.1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>INFOMAS ASL :: Annotation Detector</name>
     <description>
-    Fast, lightweight, OSGi compliant scanner for Java Annotations.
+        Fast, lightweight, OSGi compliant scanner for Java Annotations.
     </description>
 
     <!-- this is a sub module and uses scm, issue and ci managment from the parent project -->
@@ -39,7 +39,7 @@
                     <merge>true</merge>
                     <path>annotation-detector</path>
                 </configuration>
-            </plugin>
+            </plugin>      
         </plugins>
     </build>
 

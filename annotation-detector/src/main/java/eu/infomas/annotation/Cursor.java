@@ -23,6 +23,7 @@ package eu.infomas.annotation;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -59,6 +60,11 @@ public interface Cursor {
      * Return the {@link Class type} of the currently reported Java Class File.
      */
     Class<?> getType();
+
+    /**
+     * Return the {@link Constructor} instance of the currently reported annotated Method.
+     */
+    Constructor getConstructor();
 
     /**
      * Return the {@link Field} instance of the currently reported annotated Field.

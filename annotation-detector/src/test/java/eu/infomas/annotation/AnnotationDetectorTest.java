@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.annotation.ElementType;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -21,6 +22,11 @@ import static org.junit.Assert.assertSame;
     @RuntimeVisibleTestAnnotation(name="b")
 })
 public final class AnnotationDetectorTest {
+
+    @RuntimeVisibleTestAnnotation(name = "test-constructor")
+    public AnnotationDetectorTest() {
+
+    }
 
     /** Used to test {@link AnnotationDetector#getField() }. */
     @RuntimeVisibleTestAnnotation(name = "test-field")
@@ -51,6 +57,31 @@ public final class AnnotationDetectorTest {
         //System.out.println(types);
         assertEquals(1, types.size());
         assertSame(AnnotationDetectorTest.class, types.get(0));
+    }
+
+    @Test
+    public void testOnConstructor() throws IOException {
+        List<Constructor> constructors = AnnotationDetector.scanClassPath("eu.infomas")
+            .forAnnotations(RuntimeVisibleTestAnnotation.class)
+            .on(ElementType.CONSTRUCTOR)
+            .filter(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(thisClassName());
+                }
+            })
+            .collect(new ReporterFunction<Constructor>() {
+
+                @Override
+                public Constructor report(Cursor cursor) {
+                    return cursor.getConstructor();
+                }
+
+            });
+
+        //System.out.println(constructors);
+        assertEquals(1, constructors.size());
+        assertEquals("public eu.infomas.annotation.AnnotationDetectorTest()", constructors.get(0).toString());
     }
 
     @Test

@@ -623,7 +623,7 @@ public final class AnnotationDetector implements Builder, Cursor {
             memberName = resolveUtf8(di);
             methodDescriptor = resolveUtf8(di);
             LOG.log(Level.FINER, "Method: {0}", memberName);
-            readAttributes(di, memberName.equals("<init>") ? ElementType.CONSTRUCTOR : ElementType.METHOD);
+            readAttributes(di, "<init>".equals(memberName) ? ElementType.CONSTRUCTOR : ElementType.METHOD);
         }
     }
 

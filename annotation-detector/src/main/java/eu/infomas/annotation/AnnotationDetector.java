@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
@@ -254,6 +255,7 @@ public final class AnnotationDetector implements Builder, Cursor {
         for (ElementType t : types) {
             switch (t) {
                 case TYPE:
+                case CONSTRUCTOR:
                 case METHOD:
                 case FIELD:
                     elementTypes.add(t);
@@ -358,6 +360,24 @@ public final class AnnotationDetector implements Builder, Cursor {
         } catch (NoSuchFieldException ex) {
             throw assertionError(
                 "Cannot find Field '%s' for type %s", memberName, getTypeName());
+        }
+    }
+
+    /**
+     * See {@link Cursor#getConstructor() }.
+     */
+    @Override
+    public Constructor getConstructor() {
+        if (elementType != ElementType.CONSTRUCTOR) {
+            throw new IllegalStateException(
+                "Illegal to call getMethod() when " + elementType + " is reported");
+        }
+        try {
+            final Class<?>[] parameterTypes = parseArguments(methodDescriptor);
+            return getType().getConstructor(parameterTypes);
+        } catch (NoSuchMethodException ex) {
+            throw assertionError(
+                "Cannot find Contructor '%s(...)' for type %s", memberName, getTypeName());
         }
     }
 
@@ -603,7 +623,7 @@ public final class AnnotationDetector implements Builder, Cursor {
             memberName = resolveUtf8(di);
             methodDescriptor = resolveUtf8(di);
             LOG.log(Level.FINER, "Method: {0}", memberName);
-            readAttributes(di, ElementType.METHOD);
+            readAttributes(di, "<init>".equals(memberName) ? ElementType.CONSTRUCTOR : ElementType.METHOD);
         }
     }
 

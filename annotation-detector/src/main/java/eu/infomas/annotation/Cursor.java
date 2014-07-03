@@ -62,7 +62,7 @@ public interface Cursor {
     Class<?> getType();
 
     /**
-     * Return the {@link Constructor} instance of the currently reported annotated Method.
+     * Return the {@link Constructor} instance of the currently reported annotated Constructor.
      */
     Constructor getConstructor();
 

@@ -151,6 +151,7 @@ public final class AnnotationDetector implements Builder, Cursor {
     private static final int CLASS = 'c';
     private static final int ANNOTATION = '@';
 
+    private final ClassLoader loader;
     // The buffer is reused during the life cycle of this AnnotationDetector instance
     private final ClassFileBuffer cpBuffer = new ClassFileBuffer();
     private final ClassFileIterator cfIterator;
@@ -180,6 +181,11 @@ public final class AnnotationDetector implements Builder, Cursor {
     private String methodDescriptor;
 
     private AnnotationDetector(final File[] filesOrDirectories, final String[] pkgNameFilter) {
+        this(Thread.currentThread().getContextClassLoader(), filesOrDirectories, pkgNameFilter);
+    }
+
+    private AnnotationDetector(ClassLoader loader, final File[] filesOrDirectories, final String[] pkgNameFilter) {
+        this.loader = loader;
         this.cfIterator = new ClassFileIterator(filesOrDirectories, pkgNameFilter);
         if (filesOrDirectories.length == 0) {
             LOG.warning("No files or directories to scan!");
@@ -197,8 +203,20 @@ public final class AnnotationDetector implements Builder, Cursor {
     public static Builder scanClassPath(final String... packageNames)
         throws IOException {
 
-        final Set<File> files = new HashSet<File>();
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+
+        return scanClassPath(loader, packageNames);
+    }
+
+    /**
+     * Factory method, starting point for the fluent interface.
+     * Only scan Class Files in the specified packages. If nothing is specified, all classes
+     * on the class path are scanned.
+     */
+    public static Builder scanClassPath(ClassLoader loader, final String... packageNames)
+        throws IOException {
+
+        final Set<File> files = new HashSet<File>();
         final String[] pkgNameFilter;
         if (packageNames.length == 0) {
             pkgNameFilter = null;
@@ -219,7 +237,7 @@ public final class AnnotationDetector implements Builder, Cursor {
                 addFiles(loader, packageName, files);
             }
         }
-        return new AnnotationDetector(files.toArray(new File[files.size()]), pkgNameFilter);
+        return new AnnotationDetector(loader, files.toArray(new File[files.size()]), pkgNameFilter);
     }
 
     /**
@@ -343,7 +361,7 @@ public final class AnnotationDetector implements Builder, Cursor {
      */
     @Override
     public Class<?> getType() {
-        return loadClass(getTypeName());
+        return loadClass(loader, getTypeName());
     }
 
     /**
@@ -794,12 +812,12 @@ public final class AnnotationDetector implements Builder, Cursor {
                     if (c == 'L') {
                         j = descriptor.indexOf(';', i + 1);
                     }
-                    args.add(loadClass(descriptor.substring(i, j + 1)));
+                    args.add(loadClass(loader, descriptor.substring(i, j + 1)));
                     i = j;
                     break;
                 case 'L':
                     j = descriptor.indexOf(';', i + 1);
-                    args.add(loadClass(descriptor.substring(i + 1, j)));
+                    args.add(loadClass(loader, descriptor.substring(i + 1, j)));
                     i = j;
                     break;
                 case ')':
@@ -815,11 +833,10 @@ public final class AnnotationDetector implements Builder, Cursor {
     /**
      * Load the class, but do not initialize it.
      */
-    private static Class<?> loadClass(final String rawClassName) {
+    private static Class<?> loadClass(ClassLoader loader, final String rawClassName) {
         final String typeName = rawClassName.replace('/', '.');
         try {
-            final ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            return Class.forName(typeName, false, cl);
+            return Class.forName(typeName, false, loader);
         } catch (ClassNotFoundException ex) {
             throw assertionError(
                 "Cannot load type '%s', scanned file not on class path? (%s)", typeName, ex);

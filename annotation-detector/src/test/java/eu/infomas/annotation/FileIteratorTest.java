@@ -31,7 +31,7 @@ public final class FileIteratorTest {
     public void testSingleDirectory1() throws IOException {
         FileIterator iter = new FileIterator(
             new File("./src/test/java/eu/infomas/annotation"));
-        assertEquals(6, countFiles(iter));
+        assertEquals(7, countFiles(iter));
     }
     
     @Test
@@ -39,7 +39,7 @@ public final class FileIteratorTest {
         FileIterator iter = new FileIterator(
             new File("./src/test/java/eu/infomas"));
         // 5 in annotation and 2 in util
-        assertEquals(7, countFiles(iter));
+        assertEquals(8, countFiles(iter));
     }
     
     @Test
@@ -47,7 +47,7 @@ public final class FileIteratorTest {
         FileIterator iter = new FileIterator(
             new File("./src/test/java/eu/infomas/util/TestSupport.java"), 
             new File("./src/test/java/eu/infomas/annotation/"));
-        assertEquals(7, countFiles(iter));
+        assertEquals(8, countFiles(iter));
     }
     @Test
     public void testIsRoot1() throws IOException {

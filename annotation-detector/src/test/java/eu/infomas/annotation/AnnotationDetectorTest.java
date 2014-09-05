@@ -118,7 +118,7 @@ public final class AnnotationDetectorTest {
         if (DEBUG) log("Time: %d ms.", System.currentTimeMillis() - time);
         assertEquals(0, counter.getTypeCount());
         assertEquals(0, counter.getFieldCount());
-        assertEquals(14, counter.getMethodCount());
+        assertEquals(15, counter.getMethodCount());
     }
 
     @Test
@@ -133,7 +133,7 @@ public final class AnnotationDetectorTest {
         if (DEBUG) log("Time: %d ms.", System.currentTimeMillis() - time);
         assertEquals(0, counter.getTypeCount());
         assertEquals(0, counter.getFieldCount());
-        assertEquals(14, counter.getMethodCount());
+        assertEquals(15, counter.getMethodCount());
     }
     
     /**

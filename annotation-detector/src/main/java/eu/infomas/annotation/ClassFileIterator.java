@@ -21,6 +21,7 @@
  */
 package eu.infomas.annotation;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -102,7 +103,7 @@ final class ClassFileIterator {
                     if (name.endsWith(".class")) {
                         isFile = true;
                         return new FileInputStream(file);
-                    } else if (fileIterator.isRootFile() && endsWithIgnoreCase(name, ".jar")) {
+                    } else if (fileIterator.isRootFile() && (endsWithIgnoreCase(name, ".jar") || isZipFile(file))) {
                         zipIterator = new ZipFileIterator(new ZipFile(file), pkgNameFilter);
                     } // else just ignore
                 }
@@ -119,6 +120,13 @@ final class ClassFileIterator {
     }
 
     // private
+
+    private boolean isZipFile(File file) throws IOException {
+        DataInputStream in = new DataInputStream(new FileInputStream(file));
+        int n = in.readInt();
+        in.close();
+        return n == 0x504b0304;
+    }
 
     /**
      * Returns the class path of the current JVM instance as an array of {@link File} objects.

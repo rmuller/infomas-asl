@@ -28,7 +28,6 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -268,10 +267,12 @@ public final class AnnotationDetector {
             final Enumeration<URL> resourceEnum = loader.getResources(packageName);
             while (resourceEnum.hasMoreElements()) {
                 final URL url = resourceEnum.nextElement();
-                // Handle JBoss VFS URL's which look like (example package 'nl.dvelop'):
+                // Handle JBoss/WildFly VFS URL's which look like:
                 // vfs:/foo/bar/website.war/WEB-INF/classes/nl/dvelop/
                 // vfs:/foo/bar/website.war/WEB-INF/lib/dwebcore-0.0.1.jar/nl/dvelop/
-                final boolean isVfs = "vfs".equals(url.getProtocol());
+                // Known vfs protocols: vfs, vfsfile, vfszip, vfsjar, and vfsmemory
+                // See https://github.com/Atmosphere/atmosphere/issues/1701
+                final boolean isVfs = url.getProtocol().startsWith("vfs");
                 if ("file".equals(url.getProtocol()) || isVfs) {
                     final File dir = toFile(url);
                     if (dir.isDirectory()) {
@@ -300,7 +301,6 @@ public final class AnnotationDetector {
                         throw new AssertionError("Not a File: " + jarFile);
                     }
                 }
-
             }
         }
         if (DEBUG) {
@@ -332,9 +332,11 @@ public final class AnnotationDetector {
         // only correct way to convert the URL to a File object, also see issue #16
         // Do not use URLDecoder
         try {
-            return new File(url.toURI());
-        } catch (URISyntaxException ex) {
-            throw new MalformedURLException(ex.getMessage());
+            return new File(url.toURI().getPath());
+        } catch (Exception ex) {
+            final MalformedURLException mue = new MalformedURLException(url.toExternalForm());
+            mue.initCause(ex);
+            throw mue;
         }
     }
 

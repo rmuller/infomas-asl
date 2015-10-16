@@ -96,7 +96,8 @@ final class ClassFileIterator {
         while (true) {
             if (zipIterator == null) {
                 final File file = fileIterator.next();
-                if (file == null) {
+                // not all specified Files exists!
+                if (file == null || !file.isFile()) {
                     return null;
                 } else {
                     final String name = file.getName();

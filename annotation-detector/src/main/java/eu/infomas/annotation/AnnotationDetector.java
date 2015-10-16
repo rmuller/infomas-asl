@@ -266,7 +266,7 @@ public final class AnnotationDetector {
             final ClassLoader loader = Thread.currentThread().getContextClassLoader();
             final Enumeration<URL> resourceEnum = loader.getResources(packageName);
             while (resourceEnum.hasMoreElements()) {
-                final URL url = resourceEnum.nextElement();
+                URL url = resourceEnum.nextElement();
                 // Handle JBoss/WildFly VFS URL's which look like:
                 // vfs:/foo/bar/website.war/WEB-INF/classes/nl/dvelop/
                 // vfs:/foo/bar/website.war/WEB-INF/lib/dwebcore-0.0.1.jar/nl/dvelop/
@@ -292,7 +292,12 @@ public final class AnnotationDetector {
                         throw new AssertionError("Not a recognized file URL: " + url);
                     }
                 } else {
-                    // Resource in Jar File
+                    // WebLogic returns URL with "zip" protocol, returning a
+                    // weblogic.utils.zip.ZipURLConnection when opened
+                    // Easy fix is to convert this URL to jar URL
+                    if ("zip".equals(url.getProtocol())) {
+                        url = new URL(url.toExternalForm().replace("zip:/", "jar:file:/"));
+                    }
                     final File jarFile =
                         toFile(((JarURLConnection)url.openConnection()).getJarFileURL());
                     if (jarFile.isFile()) {

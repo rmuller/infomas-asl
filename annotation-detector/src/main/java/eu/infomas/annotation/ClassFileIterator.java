@@ -37,12 +37,11 @@ import java.util.zip.ZipFile;
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
  */
-final class ClassFileIterator {
+final class ClassFileIterator implements ResourceIterator {
 
     private final FileIterator fileIterator;
     private final String[] pkgNameFilter;
     private ZipFileIterator zipIterator;
-    private boolean isFile;
 
     /**
      * Create a new {@code ClassFileIterator} returning all Java ClassFile files available
@@ -78,20 +77,7 @@ final class ClassFileIterator {
             zipIterator.getEntry().getName();
     }
 
-    /**
-     * Return {@code true} if the current {@link InputStream} is reading from a plain
-     * {@link File}. Return {@code false} if the current {@link InputStream} is reading from a
-     * ZIP File Entry.
-     */
-    public boolean isFile() {
-        return isFile;
-    }
-
-    /**
-     * Return the next Java ClassFile as an {@code InputStream}.
-     * <p>
-     * NOTICE: Client code MUST close the returned {@code InputStream}!
-     */
+    @Override
     public InputStream next() throws IOException {
         while (true) {
             if (zipIterator == null) {
@@ -102,9 +88,9 @@ final class ClassFileIterator {
                 } else {
                     final String name = file.getName();
                     if (name.endsWith(".class")) {
-                        isFile = true;
                         return new FileInputStream(file);
-                    } else if (fileIterator.isRootFile() && (endsWithIgnoreCase(name, ".jar") || isZipFile(file))) {
+                    } else if (fileIterator.isRootFile() &&
+                        (endsWithIgnoreCase(name, ".jar") || isZipFile(file))) {
                         zipIterator = new ZipFileIterator(new ZipFile(file), pkgNameFilter);
                     } // else just ignore
                 }
@@ -113,7 +99,6 @@ final class ClassFileIterator {
                 if (is == null) {
                     zipIterator = null;
                 } else {
-                    isFile = false;
                     return is;
                 }
             }
@@ -122,9 +107,9 @@ final class ClassFileIterator {
 
     // private
 
-    private boolean isZipFile(File file) throws IOException {
-        DataInputStream in = new DataInputStream(new FileInputStream(file));
-        int n = in.readInt();
+    private boolean isZipFile(final File file) throws IOException {
+        final DataInputStream in = new DataInputStream(new FileInputStream(file));
+        final int n = in.readInt();
         in.close();
         return n == 0x504b0304;
     }
@@ -133,8 +118,8 @@ final class ClassFileIterator {
      * Returns the class path of the current JVM instance as an array of {@link File} objects.
      */
     private static File[] classPath() {
-        final String[] fileNames = System.getProperty("java.class.path")
-            .split(File.pathSeparator);
+        final String[] fileNames =
+            System.getProperty("java.class.path").split(File.pathSeparator);
         final File[] files = new File[fileNames.length];
         for (int i = 0; i < files.length; ++i) {
             files[i] = new File(fileNames[i]);

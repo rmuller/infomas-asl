@@ -8,16 +8,25 @@
         <version>3.0.5-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
-    
+
     <artifactId>annotation-detector</artifactId>
     <version>3.0.5-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>INFOMAS ASL :: Annotation Detector</name>
     <description>
-    Fast, lightweight, OSGi compliant scanner for Java Annotations.
+        Fast, lightweight, OSGi compliant scanner for Java Annotations.
     </description>
 
     <!-- this is a sub module and uses scm, issue and ci managment from the parent project -->
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jboss-vfs</artifactId>
+            <version>3.2.10.Final</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

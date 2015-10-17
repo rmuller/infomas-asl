@@ -23,11 +23,12 @@ package eu.infomas.annotation;
 
 import java.io.DataInput;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.net.JarURLConnection;
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -262,40 +263,25 @@ public final class AnnotationDetector {
             }
         }
         final Set<File> files = new HashSet<File>();
+        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
         for (final String packageName : pkgNameFilter) {
-            final ClassLoader loader = Thread.currentThread().getContextClassLoader();
             final Enumeration<URL> resourceEnum = loader.getResources(packageName);
             while (resourceEnum.hasMoreElements()) {
                 URL url = resourceEnum.nextElement();
-                // Handle JBoss/WildFly VFS URL's which look like:
-                // vfs:/foo/bar/website.war/WEB-INF/classes/nl/dvelop/
-                // vfs:/foo/bar/website.war/WEB-INF/lib/dwebcore-0.0.1.jar/nl/dvelop/
-                // Known vfs protocols: vfs, vfsfile, vfszip, vfsjar, and vfsmemory
-                // See https://github.com/Atmosphere/atmosphere/issues/1701
-                final boolean isVfs = url.getProtocol().startsWith("vfs");
-                if ("file".equals(url.getProtocol()) || isVfs) {
+                if ("file".equals(url.getProtocol())) {
                     final File dir = toFile(url);
                     if (dir.isDirectory()) {
                         files.add(dir);
-                    } else if (isVfs) {
-                        //Jar file via JBoss VFS protocol - strip package name
-                        String jarPath = dir.getPath();
-                        final int idx = jarPath.indexOf(".jar");
-                        if (idx > -1) {
-                            jarPath = jarPath.substring(0, idx + 4);
-                            final File jarFile = new File(jarPath);
-                            if (jarFile.isFile()) {
-                                files.add(jarFile);
-                            }
-                        }
                     } else {
                         throw new AssertionError("Not a recognized file URL: " + url);
                     }
+                } else if (url.getProtocol().startsWith("vfs")) {
+                    detect(new VfsResourceIterator(url));
                 } else {
-                    // WebLogic returns URL with "zip" protocol, returning a
-                    // weblogic.utils.zip.ZipURLConnection when opened
-                    // Easy fix is to convert this URL to jar URL
                     if ("zip".equals(url.getProtocol())) {
+                        // WebLogic returns URL with "zip" protocol, returning a
+                        // weblogic.utils.zip.ZipURLConnection when opened
+                        // Easy fix is to convert this URL to jar URL
                         url = new URL(url.toExternalForm().replace("zip:/", "jar:file:/"));
                     }
                     final File jarFile =
@@ -333,20 +319,19 @@ public final class AnnotationDetector {
 
     // private
 
-    private File toFile(final URL url) throws MalformedURLException {
+    private File toFile(final URL url) {
         // only correct way to convert the URL to a File object, also see issue #16
         // Do not use URLDecoder
         try {
             return new File(url.toURI().getPath());
-        } catch (Exception ex) {
-            final MalformedURLException mue = new MalformedURLException(url.toExternalForm());
-            mue.initCause(ex);
-            throw mue;
+        } catch (URISyntaxException ex) {
+            // we do not expect an URISyntaxException here
+            throw new AssertionError("Unable to convert URI to File: " + url);
         }
     }
 
     @SuppressWarnings("illegalcatch")
-    private void detect(final ClassFileIterator iterator) throws IOException {
+    private void detect(final ResourceIterator iterator) throws IOException {
         InputStream stream;
         while ((stream = iterator.next()) != null) {
             try {
@@ -356,13 +341,13 @@ public final class AnnotationDetector {
                 } // else ignore
             } catch (Throwable t) {
                 // catch all errors
-                if (!iterator.isFile()) {
+                if (!(stream instanceof FileInputStream)) {
                     // in case of an error we close the ZIP File here
                     stream.close();
                 }
             } finally {
                 // closing InputStream from ZIP Entry is handled by ZipFileIterator
-                if (iterator.isFile()) {
+                if (stream instanceof FileInputStream) {
                     stream.close();
                 }
             }

@@ -304,11 +304,19 @@ public final class AnnotationDetector {
     }
 
     /**
-     * Report all Java ClassFile files available from the specified files
-     * and/or directories, including sub directories.
+     * Scan all Java ClassFile ({@code *.class}) files available in the specified files
+     * and/or directories.
+     * <p>
+     * In Java, the
+     * <a href="http://docs.oracle.com/javase/8/docs/technotes/tools/unix/classpath.html.">
+     * Class path</a> contains directories (top level directory as package root) and/or
+     * jar files (including zip files).
      * <p>
      * Note that non-class files (files, not starting with the magic number
      * {@code CAFEBABE} are silently ignored.
+     *
+     * @param filesOrDirectories Valid files are: jar files, Java *.class files (all other
+     * files are silently ignored) and directories which are package root directories
      */
     public void detect(final File... filesOrDirectories) throws IOException {
         if (DEBUG) {

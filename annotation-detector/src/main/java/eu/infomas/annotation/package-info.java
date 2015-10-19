@@ -23,56 +23,7 @@
  * This library can be used to scan (part of) the class path for annotated classes, 
  * methods or instance variables.
  * <p>
- * Main advantages of this library compared with similar solutions are: 
- * <ul>
- * <li>light weight (**no dependencies**, simple API, 16 kb jar file) 
- * <li>very fast (fastest annotation detection library as far as I know).
- * </ul>
- * <h4>Maven configuration</h4>
- * <pre>
- * &lt;dependency>
- *    &lt;groupId>eu.infomas&lt;/groupId>
- *    &lt;artifactId>annotation-detector&lt;/artifactId>
- *    &lt;version>3.0.2&lt;/version>
- * &lt;/dependency>
- * </pre>
- * <h4>Example Usage</h4>
- * <p>
- * Put the {@code annotation-detector-3.0.2.jar} in the class path. No other dependencies are 
- * required! 
- * You can either scan the complete class path or only scan specified packages (see JavaDoc 
- * for more details).
- * <pre>
- * // Scan all .class files on the class path
- * // Report all .class files, with org.junit.Test annotated methods
- * final MethodReporter reporter = new MethodReporter() {
- * 
- *   {@literal @}SuppressWarnings("unchecked")
- *   {@literal @}Override
- *   public Class<? extends Annotation>[] annotations() {
- *     return new Class[]{Test.class};
- *   } 
- * 
- *   {@literal @}Override
- *   public void reportMethodAnnotation(Class<? extends Annotation> annotation,
- *     String className, String methodName) {
- *     // do something
- * 
- *   }
- * };
- * final AnnotationDetector cf = new AnnotationDetector(reporter);
- * cf.detect();
- * </pre>
- * <h4>References</h4>
- * Java Class file parsers
- * <ul>
- * <li><a href="http://www.jboss.org/javassist">javassist</a>
- * <li><a href="http://asm.ow2.org">asm</a>
- * <li><a href="http://jakarta.apache.org/bcel">Apache BCEL</a>, considered outdated
- * <li><a href="http://www.freeinternals.org/product/javaclassfilelibrary">jCFL</a>, 
- * free but not open source
- * <li><a href="http://java.decompiler.free.fr">Java decompiler</a>, also works on Linux, 
- * JAD does not!
- * </ul>
+ * For more information see 
+ * <a href="https://github.com/rmuller/infomas-asl" target="_blank">Github site</a>.
  */
 package eu.infomas.annotation;

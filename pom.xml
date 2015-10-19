@@ -119,8 +119,6 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>2.10.3</version>
                     <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
                         <encoding>${project.build.sourceEncoding}</encoding>
                         <notree>true</notree>
                         <noindex>true</noindex>

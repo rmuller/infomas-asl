@@ -308,7 +308,7 @@ public final class AnnotationDetector {
      * and/or directories.
      * <p>
      * In Java, the
-     * <a href="http://docs.oracle.com/javase/8/docs/technotes/tools/unix/classpath.html.">
+     * <a href="http://docs.oracle.com/javase/8/docs/technotes/tools/unix/classpath.html">
      * Class path</a> contains directories (top level directory as package root) and/or
      * jar files (including zip files).
      * <p>

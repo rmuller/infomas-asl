@@ -31,7 +31,7 @@ import java.io.InputStream;
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since INFOMAS NG 3.0
  */
-public interface ResourceIterator {
+interface ResourceIterator {
 
     /**
      * Return the next Java ClassFile as an {@code InputStream}.

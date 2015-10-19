@@ -2,7 +2,9 @@
 <!--
 Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -18,7 +20,7 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
     <name>INFOMAS ASL :: Parent</name>
     <description>Parent POM for open source projects of XIAM Solutions B.V.</description>
     <url>http://rmuller.github.io/infomas-asl/annotation-detector/</url>
-    
+
     <!-- TODO:
     We can not use scm here with ${project.artifactId} variables, because it creates wrong
     URL's in sub modules. So scm must be redefined in the sub modules!
@@ -72,12 +74,6 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
         </developer>
     </developers>
 
-    <prerequisites>
-        <!-- 3.0.4: first release where reporting issues are resolved -->
-        <!-- 3.1.1: reporting plugins use version info of plugin management -->
-        <maven>3.1.1</maven>
-    </prerequisites>
-
     <properties>
         <java.version>1.6</java.version>
         <!-- As close as we can get for the W3C / ISO Date Time format. Due to a
@@ -87,8 +83,7 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
         <timestamp>${maven.build.timestamp}</timestamp>
         <checkstyle.baseLocation>https://raw.github.com/rmuller/infomas-asl/master/development</checkstyle.baseLocation>
         <checkstyle.header>checkstyle-header.txt</checkstyle.header>
-        <!-- 2.12 uses Checkstyle 5.7 -->
-        <checkstyle.version>2.12.1</checkstyle.version>
+        <checkstyle.console.severity>info</checkstyle.console.severity>
         <!-- http://mevenide.codehaus.org/m2-site/mevenide2-netbeans/customizations.html -->
         <netbeans.hint.license>apache20</netbeans.hint.license>
         <github.global.server>github</github.global.server>
@@ -98,94 +93,155 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
+            <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <pluginManagement>
-            <!-- TODO: http://jira.codehaus.org/browse/MSITE-516 -->
             <plugins>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.4</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.8</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.9.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
                     <version>2.6</version>
                 </plugin>
                 <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.17</version>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.10</version>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.3</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <notree>true</notree>
+                        <noindex>true</noindex>
+                        <nohelp>true</nohelp>
+                        <links>
+                            <link>http://docs.oracle.com/javase/8/docs/api/</link>
+                        </links>
+                        <!-- http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html -->
+                        <additionalparam>-Xdoclint:none</additionalparam>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.18.1</version>
+                </plugin>
+                <plugin>
+                    <!-- version 3 depends on Java 7 -->
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>2.4.0</version>
+                    <version>2.5.4</version>
+                    <extensions>true</extensions>
                 </plugin>
                 <plugin>
+                    <!-- Starting v3.4 inheritance of plugin info is fixed (MSITE-516) -->
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.3</version>
+                    <version>3.4</version>
                 </plugin>
                 <plugin>
+                     <!-- 2.15 uses Checkstyle 6.1.1 by default and requires Java 1.6.
+                    Newer versions of Checkstyle are based on Java 7! -->
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>${checkstyle.version}</version>
+                    <version>2.15</version>
+                    <configuration>
+                        <includeResources>false</includeResources>
+                        <includeTestResources>false</includeTestResources>
+                        <includes>eu/infomas/**/*.java</includes>
+                        <propertyExpansion>checkstyle.console.severity=${checkstyle.console.severity}</propertyExpansion>
+                        <configLocation>${checkstyle.baseLocation}/checkstyle-config.xml</configLocation>
+                        <headerLocation>${checkstyle.baseLocation}/${checkstyle.header}</headerLocation>
+                        <consoleOutput>true</consoleOutput>
+                        <!-- build fails on errors, not on warnings -->
+                        <failsOnError>true</failsOnError>
+                        <!-- all default values
+                        <violationSeverity>error</violationSeverity>
+                        <logViolationsToConsole>true</logViolationsToConsole>
+                        <failOnViolation>true</failOnViolation>
+                        -->
+                        <linkXRef>false</linkXRef>
+                    </configuration>
                 </plugin>
                 <plugin>
-                    <!-- since 0.9: "mvn site:site" -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.4.1</version>
+                </plugin>
+                <plugin>
+                    <!-- since 0.9: "mvn site" to deploy maven generated site -->
                     <groupId>com.github.github</groupId>
                     <artifactId>site-maven-plugin</artifactId>
-                    <version>0.9</version>
+                    <version>0.12</version>
                     <configuration>
-                        <message>Creating gh-pages with JavaDoc for ${project.artifactId}-${project.version}</message>
-                        <outputDirectory>./target/site/</outputDirectory>
+                        <message>Creating gh-pages for ${project.artifactId}-${project.version}</message>
+                        <outputDirectory>target/site</outputDirectory>
                         <repositoryName>infomas-asl</repositoryName>
                         <repositoryOwner>rmuller</repositoryOwner>
+                        <merge>false</merge>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>site</goal>
+                            </goals>
+                            <phase>site</phase>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
+
         <plugins>
             <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
+                <configuration>
+                    <rules>
+                        <!-- 3.1.1: reporting plugins use version info of plugin management -->
+                        <requireMavenVersion>
+                            <version>[3.1.1,)</version>
+                        </requireMavenVersion>
+                        <!-- Latest public release Oracle JDK 6: update 45 -->
+                        <requireJavaVersion>
+                            <version>[1.6.0-45,)</version>
+                        </requireJavaVersion>
+                    </rules>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.3</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <compilerArgument>-Xlint:all,-rawtypes</compilerArgument>
                     <showDeprecation>true</showDeprecation>
-                    <!--
-                    Since JDK1.3 javac ignores any optimization flags
-                    Size of generated jar file:
-                    16302 - default settings
-                    16300 - optimize = true (?)
-                    14811 - optimize = true; debug = true
-                    -->
+                    <showWarnings>true</showWarnings>
+                    <!-- Since JDK1.3 javac ignores any optimization flags -->
                     <optimize>true</optimize>
                     <debug>false</debug>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>2.6</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
@@ -200,15 +256,6 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
             </plugin>
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                    <consoleOutput>true</consoleOutput>
-                    <!-- build fails on errors, not on warnings -->
-                    <failsOnError>true</failsOnError>
-                    <linkXRef>false</linkXRef>
-                    <configLocation>${checkstyle.baseLocation}/checkstyle-config.xml</configLocation>
-                    <headerLocation>${checkstyle.baseLocation}/${checkstyle.header}</headerLocation>
-                    <excludes>eu/infomas/external/**/*.java</excludes>
-                </configuration>
                 <executions>
                     <execution>
                         <id>checkstyle-main</id>
@@ -222,9 +269,6 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
             <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
-                <configuration>
-                    <merge>false</merge>
-                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -233,11 +277,10 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
         <plugins>
             <plugin>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.7</version>
+                <version>2.8.1</version>
             </plugin>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -245,60 +288,19 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
                         </reports>
                     </reportSet>
                 </reportSets>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <notree>true</notree>
-                    <noindex>true</noindex>
-                    <nohelp>true</nohelp>
-                    <links>
-                        <link>http://docs.oracle.com/javase/6/docs/api/</link>
-                    </links>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <aggregate>false</aggregate>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>jxr</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
             </plugin>
 
             <!-- Code Quality -->
             <plugin>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyle.version}</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>checkstyle</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-                <configuration>
-                    <!-- TODO: SuppressWithNearbyCommentFilter is ignored @ reporting (only) -->
-                    <enableRulesSummary>false</enableRulesSummary>
-                    <enableRSS>false</enableRSS>
-                    <enableSeveritySummary>false</enableSeveritySummary>
-                    <configLocation>${checkstyle.baseLocation}/checkstyle-config.xml</configLocation>
-                    <headerLocation>${checkstyle.baseLocation}/${checkstyle.header}</headerLocation>
-                </configuration>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.18.1</version>
             </plugin>
             <plugin>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.17</version>
+                <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.5</version>
                 <configuration>
                     <targetJdk>${java.version}</targetJdk>
                 </configuration>
@@ -306,17 +308,8 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.5.3</version>
+                <version>3.0.2</version>
             </plugin>
-            <!-- 
-            Artifact available in Maven Central does NOT support Java 7 syntax! 
-            See https://jira.codehaus.org/browse/JAVANCSS-53 (issue is fixed)
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>javancss-maven-plugin</artifactId>
-                <version>2.0</version>
-            </plugin>
-            -->
         </plugins>
     </reporting>
 

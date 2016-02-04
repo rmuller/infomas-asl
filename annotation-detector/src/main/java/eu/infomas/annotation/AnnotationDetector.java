@@ -299,9 +299,9 @@ public final class AnnotationDetector {
                     if (url.getProtocol().startsWith("bundle")) {
                         try {
                             final Method m = urlConnection.getClass().
-                                getDeclaredMethod("getLocalURL", (Class<?>)null);
+                                getDeclaredMethod("getLocalURL", (Class<?>[])null);
                             m.setAccessible(true);
-                            final URL jarUrl = (URL)m.invoke(urlConnection, (Class<?>)null);
+                            final URL jarUrl = (URL)m.invoke(urlConnection);
                             urlConnection = jarUrl.openConnection();
                         } catch (Exception e) {
                             throw new AssertionError("Failed processing bundle - couldn't" +

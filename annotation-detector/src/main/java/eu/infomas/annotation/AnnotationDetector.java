@@ -27,9 +27,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -284,12 +286,39 @@ public final class AnnotationDetector {
                         // Easy fix is to convert this URL to jar URL
                         url = new URL(url.toExternalForm().replace("zip:/", "jar:file:/"));
                     }
-                    final File jarFile =
-                        toFile(((JarURLConnection)url.openConnection()).getJarFileURL());
-                    if (jarFile.isFile()) {
-                        files.add(jarFile);
+                    URLConnection urlConnection = url.openConnection();
+                    /*
+                      GlassFish 4.1.1 is providing a URLConnection of type: 
+                      http://svn.apache.org/viewvc/felix/trunk/framework/src/main/java/org/
+                      apache/felix/framework/URLHandlersBundleURLConnection.java?view=markup
+                     
+                      Which does _not_ extend JarURLConnection.  
+                      This bit of reflection allows us to call the getLocalURL method which 
+                      actually returns a URL to a jar file.
+                    */ 
+                    if (url.getProtocol().startsWith("bundle")) {
+                        try {
+                            final Method m = urlConnection.getClass().
+                                getDeclaredMethod("getLocalURL", (Class<?>)null);
+                            m.setAccessible(true);
+                            final URL jarUrl = (URL)m.invoke(urlConnection, (Class<?>)null);
+                            urlConnection = jarUrl.openConnection();
+                        } catch (Exception e) {
+                            throw new AssertionError("Failed processing bundle - couldn't" +
+                                " read jar file URL from bundle", e);
+                        }
+                    }
+                    if (urlConnection instanceof JarURLConnection) {
+                        final File jarFile = toFile(((JarURLConnection)urlConnection)
+                            .getJarFileURL());
+                        if (jarFile.isFile()) {
+                            files.add(jarFile);
+                        } else {
+                            throw new AssertionError("Not a File: " + jarFile);
+                        }
                     } else {
-                        throw new AssertionError("Not a File: " + jarFile);
+                        throw new AssertionError("Unknown urlConnection type: " +
+                            urlConnection.getClass());
                     }
                 }
             }

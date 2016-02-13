@@ -99,7 +99,7 @@ for more details).
 // Get a List with all classes annotated with @RuntimeVisibleTestAnnotation (Java 8 syntax)
 List<Class<?>> types = AnnotationDetector.scanClassPath()
     .forAnnotations(RuntimeVisibleTestAnnotation.class)
-    .collect(AnnotationDetector::getType);
+    .collect((Cursor cursor) -> cursor.getType());
 
     assertEquals(1, types.size());
     assertSame(NewApiTest.class, types.get(0));
@@ -110,7 +110,7 @@ List<Method> methods = AnnotationDetector.scanClassPath("eu.infomas") // or: sca
     .forAnnotations(RuntimeVisibleTestAnnotation.class) // one or more annotations
     .on(ElementType.METHOD) // optional, default ElementType.TYPE. One ore more element types
     .filter((File dir, String name) -> !name.endsWith("Test.class")) // optional, default all *.class files
-    .collect(AnnotationDetector::getMethod);
+    .collect((Cursor cursor) -> cursor.getMethod()));
 
     assertEquals(1, methods.size());
     assertEquals(void.class, methods.get(0).getReturnType());

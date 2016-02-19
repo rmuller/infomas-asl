@@ -19,15 +19,15 @@ under the License.
 -->
 <rss version="0.91">
   <channel>
-    <title>INFOMAS ASL :: Annotation Detector - Checkstyle report</title>
+    <title>INFOMAS ASL :: Annotation Detector 3.1.x - Checkstyle report</title>
     <link>http://rmuller.github.io/infomas-asl/annotation-detector/annotation-detector/</link>
-    <description>INFOMAS ASL :: Annotation Detector - Checkstyle report</description>
+    <description>INFOMAS ASL :: Annotation Detector 3.1.x - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2011 - 2015 XIAM Solutions B.V.</copyright>
+    <copyright>&#169;2011 - 2016 XIAM Solutions B.V.</copyright>
     <item>
-      <title>File: 8,
+      <title>File: 12,
              Errors: 0,
-             Warnings: 4,
+             Warnings: 6,
              Infos: 0
       </title>
             <link>http://rmuller.github.io/infomas-asl/annotation-detector/annotation-detector//checkstyle.html</link>
@@ -60,13 +60,41 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://rmuller.github.io/infomas-asl/annotation-detector/annotation-detector//checkstyle.html#eu.infomas.annotation.FileIterator.java">eu/infomas/annotation/FileIterator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://rmuller.github.io/infomas-asl/annotation-detector/annotation-detector//checkstyle.html#eu.infomas.annotation.Reporter.java">eu/infomas/annotation/Reporter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://rmuller.github.io/infomas-asl/annotation-detector/annotation-detector//checkstyle.html#eu.infomas.annotation.ClassFileIterator.java">eu/infomas/annotation/ClassFileIterator.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -75,6 +103,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://rmuller.github.io/infomas-asl/annotation-detector/annotation-detector//checkstyle.html#eu.infomas.annotation.ResourceIterator.java">eu/infomas/annotation/ResourceIterator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://rmuller.github.io/infomas-asl/annotation-detector/annotation-detector//checkstyle.html#eu.infomas.annotation.Builder.java">eu/infomas/annotation/Builder.java</a>
                 </td>
                 <td>
                   0
@@ -108,7 +150,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  6
                 </td>
                 <td>
                   0
@@ -116,7 +158,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://rmuller.github.io/infomas-asl/annotation-detector/annotation-detector//checkstyle.html#eu.infomas.annotation.package-info.java">eu/infomas/annotation/package-info.java</a>
+                  <a href="http://rmuller.github.io/infomas-asl/annotation-detector/annotation-detector//checkstyle.html#eu.infomas.annotation.Cursor.java">eu/infomas/annotation/Cursor.java</a>
                 </td>
                 <td>
                   0
@@ -130,7 +172,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://rmuller.github.io/infomas-asl/annotation-detector/annotation-detector//checkstyle.html#eu.infomas.annotation.FileIterator.java">eu/infomas/annotation/FileIterator.java</a>
+                  <a href="http://rmuller.github.io/infomas-asl/annotation-detector/annotation-detector//checkstyle.html#eu.infomas.annotation.ReporterFunction.java">eu/infomas/annotation/ReporterFunction.java</a>
                 </td>
                 <td>
                   0
@@ -145,6 +187,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://rmuller.github.io/infomas-asl/annotation-detector/annotation-detector//checkstyle.html#eu.infomas.annotation.VfsResourceIterator.java">eu/infomas/annotation/VfsResourceIterator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://rmuller.github.io/infomas-asl/annotation-detector/annotation-detector//checkstyle.html#eu.infomas.annotation.package-info.java">eu/infomas/annotation/package-info.java</a>
                 </td>
                 <td>
                   0

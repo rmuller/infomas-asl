@@ -5,7 +5,7 @@
  *
  ****************************************** LICENSE *******************************************
  *
- * Copyright (c) 2011 - 2013 XIAM Solutions B.V. (http://www.xiam.nl)
+ * Copyright (c) 2011 - 2016 XIAM Solutions B.V. (http://www.xiam.nl)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -278,14 +280,7 @@ public final class AnnotationDetector {
                 } else if (url.getProtocol().startsWith("vfs")) {
                     detect(new VfsResourceIterator(url));
                 } else {
-                    if ("zip".equals(url.getProtocol())) {
-                        // WebLogic returns URL with "zip" protocol, returning a
-                        // weblogic.utils.zip.ZipURLConnection when opened
-                        // Easy fix is to convert this URL to jar URL
-                        url = new URL(url.toExternalForm().replace("zip:/", "jar:file:/"));
-                    }
-                    final File jarFile =
-                        toFile(((JarURLConnection)url.openConnection()).getJarFileURL());
+                    final File jarFile = toFile(openJarURLConnection(url).getJarFileURL());
                     if (jarFile.isFile()) {
                         files.add(jarFile);
                     } else {
@@ -335,6 +330,43 @@ public final class AnnotationDetector {
         } catch (URISyntaxException ex) {
             // we do not expect an URISyntaxException here
             throw new AssertionError("Unable to convert URI to File: " + url);
+        }
+    }
+
+    private JarURLConnection openJarURLConnection(final URL url) throws IOException {
+        final URL checkedUrl;
+        if ("zip".equals(url.getProtocol())) {
+            // WebLogic returns URL with "zip" protocol, returning a
+            // weblogic.utils.zip.ZipURLConnection when opened
+            // Easy fix is to convert this URL to jar URL
+            checkedUrl = new URL(url.toExternalForm().replace("zip:/", "jar:file:/"));
+        } else {
+            checkedUrl = url;
+        }
+        URLConnection urlConnection = checkedUrl.openConnection();
+        // GlassFish 4.1.1 is providing a URLConnection of type:
+        // http://svn.apache.org/viewvc/felix/trunk/framework/src/main/java/org/
+        // apache/felix/framework/URLHandlersBundleURLConnection.java?view=markup
+        // Which does _not_ extend JarURLConnection.
+        // This bit of reflection allows us to call the getLocalURL method which
+        // actually returns a URL to a jar file.
+        if (checkedUrl.getProtocol().startsWith("bundle")) {
+            try {
+                final Method m = urlConnection.getClass().getDeclaredMethod("getLocalURL");
+                if (!m.isAccessible()) {
+                    m.setAccessible(true);
+                }
+                final URL jarUrl = (URL)m.invoke(urlConnection);
+                urlConnection = jarUrl.openConnection();
+            } catch (Exception ex) {
+                throw new AssertionError("Couldn't read jar file URL from bundle", ex);
+            }
+        }
+        if (urlConnection instanceof JarURLConnection) {
+            return (JarURLConnection)urlConnection;
+        } else {
+            throw new AssertionError(
+                "Unknown URLConnection type: " + urlConnection.getClass().getName());
         }
     }
 

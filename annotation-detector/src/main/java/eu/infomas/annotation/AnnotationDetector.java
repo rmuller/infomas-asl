@@ -220,7 +220,6 @@ public final class AnnotationDetector {
      * to the specified {@code Reporter}.
      */
     public AnnotationDetector(final Reporter reporter) {
-
         final Class<? extends Annotation>[] a = reporter.annotations();
         annotations = new HashMap<String, Class<? extends Annotation>>(a.length);
         // map "raw" type names to Class object
@@ -293,8 +292,8 @@ public final class AnnotationDetector {
             print("Files to scan: %s", files);
         }
         if (!files.isEmpty()) {
-            detect(new ClassFileIterator(files.toArray(new File[files.size()]),
-                pkgNameFilter));
+            // see http://shipilev.net/blog/2016/arrays-wisdom-ancients/#_conclusion
+            detect(new ClassFileIterator(files.toArray(new File[0]), pkgNameFilter));
         }
     }
 
@@ -326,7 +325,7 @@ public final class AnnotationDetector {
         // only correct way to convert the URL to a File object, also see issue #16
         // Do not use URLDecoder
         try {
-            return new File(url.toURI().getPath());
+            return new File(url.toURI());
         } catch (URISyntaxException ex) {
             // we do not expect an URISyntaxException here
             throw new AssertionError("Unable to convert URI to File: " + url);

@@ -47,7 +47,7 @@ final class ClassFileIterator implements ResourceIterator {
      * Create a new {@code ClassFileIterator} returning all Java ClassFile files available
      * from the class path ({@code System.getProperty("java.class.path")}).
      */
-    ClassFileIterator() throws IOException {
+    ClassFileIterator() {
         this(classPath(), null);
     }
 
@@ -59,9 +59,7 @@ final class ClassFileIterator implements ResourceIterator {
      * defined package names are returned.
      * NOTE: package names must be defined in the native format (using '/' instead of '.').
      */
-    ClassFileIterator(final File[] filesOrDirectories, final String[] pkgNameFilter)
-        throws IOException {
-
+    ClassFileIterator(final File[] filesOrDirectories, final String[] pkgNameFilter) {
         this.fileIterator = new FileIterator(filesOrDirectories);
         this.pkgNameFilter = pkgNameFilter;
     }

@@ -12,7 +12,7 @@
     <artifactId>annotation-detector</artifactId>
     <version>3.0.6-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>INFOMAS ASL :: Annotation Detector</name>
+    <name>INFOMAS ASL :: Annotation Detector 3.0.x</name>
     <description>
         Fast, lightweight, OSGi compliant scanner for Java Annotations.
     </description>

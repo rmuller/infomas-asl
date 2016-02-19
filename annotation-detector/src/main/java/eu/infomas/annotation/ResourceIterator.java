@@ -31,13 +31,13 @@ import java.io.InputStream;
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since INFOMAS NG 3.0
  */
-interface ResourceIterator {
+abstract class ResourceIterator {
 
     /**
      * Return the next Java ClassFile as an {@code InputStream}.
      * <p>
      * NOTICE: Client code MUST close the returned {@code InputStream}!
      */
-    InputStream next() throws IOException;
+    abstract InputStream next() throws IOException;
 
 }

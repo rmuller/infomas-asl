@@ -268,7 +268,7 @@ public final class AnnotationDetector {
         for (final String packageName : pkgNameFilter) {
             final Enumeration<URL> resourceEnum = loader.getResources(packageName);
             while (resourceEnum.hasMoreElements()) {
-                URL url = resourceEnum.nextElement();
+                final URL url = resourceEnum.nextElement();
                 if ("file".equals(url.getProtocol())) {
                     final File dir = toFile(url);
                     if (dir.isDirectory()) {

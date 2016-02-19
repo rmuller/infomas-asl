@@ -37,7 +37,7 @@ import java.util.zip.ZipFile;
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
  */
-final class ClassFileIterator implements ResourceIterator {
+final class ClassFileIterator extends ResourceIterator {
 
     private final FileIterator fileIterator;
     private final String[] pkgNameFilter;
@@ -76,7 +76,7 @@ final class ClassFileIterator implements ResourceIterator {
     }
 
     @Override
-    public InputStream next() throws IOException {
+    InputStream next() throws IOException {
         while (true) {
             if (zipIterator == null) {
                 final File file = fileIterator.next();

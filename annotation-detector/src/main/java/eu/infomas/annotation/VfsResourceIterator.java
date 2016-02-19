@@ -45,10 +45,10 @@ import org.jboss.vfs.VirtualFile;
  * <li>https://github.com/jersey/jersey/pull/100
  *
  * <b>NOTICE</b>: Only tested with WildFly 8.2.0.Final and 9.0.1.Final.
- * 
+ *
  * @since annotation-detector 3.0.5
  */
-final class VfsResourceIterator implements ResourceIterator {
+final class VfsResourceIterator extends ResourceIterator {
 
 
     private final List<VirtualFile> files;
@@ -60,7 +60,7 @@ final class VfsResourceIterator implements ResourceIterator {
     }
 
     @Override
-    public InputStream next() throws IOException {
+    InputStream next() throws IOException {
         while (true) {
             if (++index >= files.size()) {
                 // no files

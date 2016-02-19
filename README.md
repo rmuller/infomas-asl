@@ -2,7 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/rmuller/infomas-asl.png)](http://travis-ci.org/rmuller/infomas-asl) 
 [![Reference Status](https://www.versioneye.com/java/eu.infomas:annotation-detector/reference_badge.svg?style=flat)](https://www.versioneye.com/java/eu.infomas:annotation-detector/references)
-[![Maven Central](https://img.shields.io/maven-central/v/eu.infomas/annotation-detector.svg?style=flat)]
+[![Maven Central](https://img.shields.io/maven-central/v/eu.infomas/annotation-detector.svg?style=flat)](http://search.maven.org/remotecontent?filepath=eu/infomas/annotation-detector/3.0.5/annotation-detector-3.0.5.jar)
 
 INFOMAS ASL contains all open sourced code from the INFOMAS PIM Application Suite. All code is licensed by the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0), so it can be used by both open source and commercial projects.
 

@@ -358,7 +358,7 @@ public final class AnnotationDetector {
                 final URL jarUrl = (URL)m.invoke(urlConnection);
                 urlConnection = jarUrl.openConnection();
             } catch (Exception ex) {
-                throw new AssertionError("Couldn't read jar file URL from bundle", ex);
+                throw new AssertionError("Couldn't read jar file URL from bundle: " + ex);
             }
         }
         if (urlConnection instanceof JarURLConnection) {

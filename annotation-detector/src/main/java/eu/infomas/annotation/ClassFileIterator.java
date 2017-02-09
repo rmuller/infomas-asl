@@ -37,7 +37,7 @@ import java.util.zip.ZipFile;
  * @author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  * @since annotation-detector 3.0.0
  */
-final class ClassFileIterator extends ResourceIterator {
+public final class ClassFileIterator extends ResourceIterator {
 
     private final FileIterator fileIterator;
     private final String[] pkgNameFilter;
@@ -59,7 +59,7 @@ final class ClassFileIterator extends ResourceIterator {
      * defined package names are returned.
      * NOTE: package names must be defined in the native format (using '/' instead of '.').
      */
-    ClassFileIterator(final File[] filesOrDirectories, final String[] pkgNameFilter) {
+    public ClassFileIterator(final File[] filesOrDirectories, final String[] pkgNameFilter) {
         this.fileIterator = new FileIterator(filesOrDirectories);
         this.pkgNameFilter = pkgNameFilter;
     }
@@ -76,7 +76,7 @@ final class ClassFileIterator extends ResourceIterator {
     }
 
     @Override
-    InputStream next() throws IOException {
+    public InputStream next() throws IOException {
         while (true) {
             if (zipIterator == null) {
                 final File file = fileIterator.next();

@@ -370,7 +370,7 @@ public final class AnnotationDetector {
     }
 
     @SuppressWarnings("illegalcatch")
-    private void detect(final ResourceIterator iterator) throws IOException {
+    public void detect(final ResourceIterator iterator) throws IOException {
         InputStream stream;
         while ((stream = iterator.next()) != null) {
             try {

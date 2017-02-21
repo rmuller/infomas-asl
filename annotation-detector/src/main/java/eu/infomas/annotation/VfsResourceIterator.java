@@ -60,7 +60,7 @@ final class VfsResourceIterator extends ResourceIterator {
     }
 
     @Override
-    InputStream next() throws IOException {
+    public InputStream next() throws IOException {
         while (true) {
             if (++index >= files.size()) {
                 // no files

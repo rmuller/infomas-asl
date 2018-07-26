@@ -19,7 +19,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.infomas.walk;
+package eu.infomas.annotation;
 
 import java.io.DataInput;
 import java.io.File;

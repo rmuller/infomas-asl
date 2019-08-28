@@ -13,7 +13,7 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
-        <tomcat.version>7.0.67</tomcat.version>
+        <tomcat.version>[7.0.94,)</tomcat.version>
         <!-- 
         API incompatibility was encountered while executing 
         org.apache.tomcat.maven:tomcat7-maven-plugin:2.2:run: java.lang.NoSuchMethodError: 

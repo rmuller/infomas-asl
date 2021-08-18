@@ -91,7 +91,7 @@ Maven parent POM for all 'nl.xiam' and 'eu.infomas' Java based projects.
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
